@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CEO Lawyer Creative Performance Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0C0F14;color:#E2E8F0;font-family:'DM Sans',sans-serif;padding:24px 24px 48px;min-height:100vh}
+.wrap{max-width:1700px;margin:0 auto}
+h1{font-size:28px;font-weight:700;color:#F8FAFC;text-align:center}
+.sub{font-size:14px;color:#94A3B8;text-align:center;margin-top:4px}
+.legend{display:flex;justify-content:center;gap:24px;margin:14px 0 18px;font-size:12px;color:#94A3B8;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot-g{background:#34D399}.dot-y{background:#FBBF24}.dot-r{background:#F87171}.dot-x{background:#475569}
+.controls{display:flex;gap:10px;margin-bottom:12px;align-items:center}
+.search{width:280px;padding:8px 12px;background:#151922;border:1px solid #334155;border-radius:8px;color:#E2E8F0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
+.search:focus{border-color:#3B82F6}
+.btn{padding:7px 16px;background:#151922;border:1px solid #334155;border-radius:8px;color:#94A3B8;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn:hover,.btn.on{background:#334155;color:#E2E8F0}
+.tabs{display:flex;width:fit-content;background:#151922;border-radius:10px;border:1px solid #1E293B;margin-bottom:14px;overflow:hidden}
+.tab{padding:10px 20px;font-size:13px;color:#64748B;cursor:pointer;border-right:1px solid #1E293B;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif}
+.tab:last-child{border-right:none}
+.tab:hover{color:#CBD5E1}
+.tab.active{background:#3B82F6;color:#fff}
+.tab .cnt{opacity:.6;margin-left:4px}
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid #1E293B}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#151922;color:#94A3B8;font-weight:600;text-align:left;padding:10px 12px;white-space:nowrap;position:sticky;top:0;z-index:11;cursor:pointer;user-select:none;font-family:'DM Sans',sans-serif;border-bottom:1px solid #1E293B}
+thead th .arr{font-size:10px;margin-left:3px;opacity:.3}
+thead th.sorted .arr{opacity:1;color:#3B82F6}
+tbody td{padding:8px 12px;border-bottom:1px solid #1E293B;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px}
+tbody tr:hover td{background:#1a1f2e}
+.col-idx{position:sticky;left:0;z-index:5;background:#0C0F14;min-width:36px;text-align:center;color:#475569;font-size:11px}
+.col-name{position:sticky;left:36px;z-index:5;background:#0C0F14;min-width:340px;max-width:400px;font-family:'DM Sans',sans-serif;font-weight:500;color:#F8FAFC;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+thead .col-idx{z-index:12;background:#151922}
+thead .col-name{z-index:12;background:#151922}
+tbody tr:hover .col-idx,tbody tr:hover .col-name{background:#1a1f2e}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif}
+.st-winner{background:rgba(52,211,153,.15);color:#34D399}
+.st-loser{background:rgba(248,113,113,.15);color:#F87171}
+.st-testing{background:rgba(96,165,250,.15);color:#60A5FA}
+.st-fence{background:rgba(251,191,36,.15);color:#FBBF24}
+.st-paused,.st-past,.st-killed{background:rgba(71,85,105,.15);color:#94A3B8}
+.wk{background:rgba(52,211,153,.15);color:#34D399;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
+.of{background:rgba(251,191,36,.15);color:#FBBF24;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
+.ak{background:rgba(248,113,113,.15);color:#F87171;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
+.nd{color:#475569}
+a.view{color:#60A5FA;font-family:'DM Sans',sans-serif;font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+a.view:hover{color:#93C5FD}
+a.view svg{width:10px;height:10px}
+.row-count{text-align:right;color:#475569;font-size:12px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>CEO Lawyer Creative Performance Dashboard</h1>
+<div class="sub">CEO Lawyer — All-Time Performance Data | Generated March 25, 2026</div>
+<div class="legend" id="legend">
+  <span><span class="dot dot-g"></span>CPS ≤ $2,000 | CPL ≤ $100</span>
+  <span><span class="dot dot-y"></span>CPS $2,000–$2,500 | CPL $100–$150</span>
+  <span><span class="dot dot-r"></span>CPS &gt; $2,500 | CPL &gt; $150</span>
+  <span><span class="dot dot-x"></span>No Data</span>
+</div>
+<div class="controls">
+  <input class="search" id="search" placeholder="Search creatives..." oninput="render()">
+  <button class="btn" id="btnWin" onclick="toggleFilter('win')">Winners Only</button>
+  <button class="btn" id="btnSpend" onclick="toggleFilter('spend')">Min $5,000 Spend</button>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="tbl-wrap" id="tblWrap"></div>
+<div class="row-count" id="rowCount"></div>
+</div>
+<script>
+const KPI={
+  cps:{green:2000,yellow:2500},
+  cpWanted:{green:750,yellow:1200},
+  cpThreeplus:{green:200,yellow:350},
+  cpl:{green:100,yellow:150},
+  cpm:{green:30,yellow:50}
+};
+
+const TABS=[
+  {id:'static',label:'Static Ads',count:101,concept:false},
+  {id:'staticConcepts',label:'Static Concepts',count:56,concept:true},
+  {id:'video',label:'Video Ads',count:41,concept:false},
+  {id:'videoConcepts',label:'Video Concepts',count:16,concept:true}
+];
+
+const DATA={
+  static:[{name:"SC9_AnthonyReed | SV2_GmailDark",status:"Loser",link:"",cost:29439.6,leads:311.0,cpl:94.66,threeplus:110.0,cpThreeplus:267.63,wanted:3.0,cpWanted:9813.2,sales:3.0,cpSale:9813.2,ctrAll:5.17,ctrLink:5.26,cpm:52.07,impressions:565337.0},
+{name:"SC7_MiaThompson | SV3_GmailWhite",status:"Loser",link:"",cost:28177.23,leads:331.0,cpl:85.13,threeplus:148.0,cpThreeplus:190.39,wanted:8.0,cpWanted:3522.15,sales:6.0,cpSale:4696.21,ctrAll:3.89,ctrLink:3.98,cpm:31.92,impressions:882677.0},
+{name:"SC2_MarkJensen | SV3_GmailWhite",status:"Loser",link:"",cost:21704.56,leads:244.0,cpl:88.95,threeplus:116.0,cpThreeplus:187.11,wanted:7.0,cpWanted:3100.65,sales:5.0,cpSale:4340.91,ctrAll:2.69,ctrLink:2.46,cpm:50.47,impressions:430068.0},
+{name:"SC7_MiaThompson | SV19_GmailWhiteDisclaimer",status:"Testing",link:"",cost:21417.79,leads:330.0,cpl:64.9,threeplus:188.0,cpThreeplus:113.92,wanted:13.0,cpWanted:1647.52,sales:9.0,cpSale:2379.75,ctrAll:8.12,ctrLink:8.46,cpm:56.08,impressions:166669.0},
+{name:"Truck Ad 2 1x1 - Disclaimer updated | Trucking Copy [🚛 Hit by a Commercial Truck or Bus? You May Be Owed Significant Compensation! ] - 02-16-26",status:"",link:"",cost:18707.75,leads:231.0,cpl:80.99,threeplus:135.0,cpThreeplus:138.58,wanted:15.0,cpWanted:1247.18,sales:9.0,cpSale:2078.64,ctrAll:5.8,ctrLink:6.08,cpm:33.65,impressions:558307.0},
+{name:"CEO - Reddit 2 Static - White | Trucking",status:"",link:"",cost:18252.49,leads:205.0,cpl:89.04,threeplus:105.0,cpThreeplus:173.83,wanted:7.0,cpWanted:2607.5,sales:6.0,cpSale:3042.08,ctrAll:2.28,ctrLink:2.05,cpm:34.98,impressions:420868.0},
+{name:"SC8_MeganCollins | SV3_GmailWhite",status:"Winner",link:"",cost:16402.65,leads:187.0,cpl:87.71,threeplus:85.0,cpThreeplus:192.97,wanted:11.0,cpWanted:1491.15,sales:10.0,cpSale:1640.27,ctrAll:2.3,ctrLink:1.8,cpm:33.34,impressions:492007.0},
+{name:"SC10_CEO1 | SV27_RedditDarkDisclaimer",status:"Testing",link:"",cost:15525.42,leads:207.0,cpl:75.0,threeplus:131.0,cpThreeplus:118.51,wanted:21.0,cpWanted:739.31,sales:12.0,cpSale:1293.79,ctrAll:5.36,ctrLink:5.42,cpm:61.75,impressions:108888.0},
+{name:"SC8_MeganCollins | SV23_GmailDarkARDisclaimer",status:"Testing",link:"",cost:13941.31,leads:208.0,cpl:67.03,threeplus:84.0,cpThreeplus:165.97,wanted:6.0,cpWanted:2323.55,sales:4.0,cpSale:3485.33,ctrAll:3.02,ctrLink:1.12,cpm:13.89,impressions:481459.0},
+{name:"SC21_CEO2 | SV22_RedditWhiteARDisclaimer",status:"Testing",link:"",cost:12525.83,leads:181.0,cpl:69.2,threeplus:65.0,cpThreeplus:192.71,wanted:6.0,cpWanted:2087.64,sales:6.0,cpSale:2087.64,ctrAll:2.25,ctrLink:1.1,cpm:16.0,impressions:368582.0},
+{name:"SC8_MeganCollins | SV21_GmailWhiteARDisclaimer",status:"Testing",link:"",cost:11535.98,leads:151.0,cpl:76.4,threeplus:70.0,cpThreeplus:164.8,wanted:7.0,cpWanted:1648.0,sales:5.0,cpSale:2307.2,ctrAll:2.99,ctrLink:0.93,cpm:13.8,impressions:394101.0},
+{name:"SC5_MichelleKing | SV3_GmailWhite",status:"Loser",link:"",cost:11153.45,leads:111.0,cpl:100.48,threeplus:38.0,cpThreeplus:293.51,wanted:3.0,cpWanted:3717.82,sales:3.0,cpSale:3717.82,ctrAll:1.99,ctrLink:1.78,cpm:36.87,impressions:302489.0},
+{name:"SC6_DavidKim | SV2_GmailDark",status:"Loser",link:"",cost:9211.15,leads:91.0,cpl:101.22,threeplus:35.0,cpThreeplus:263.18,wanted:4.0,cpWanted:2302.79,sales:2.0,cpSale:4605.58,ctrAll:2.78,ctrLink:2.47,cpm:41.41,impressions:222413.0},
+{name:"Ad 763349980778 (763349980778)",status:"",link:"",cost:8813.66,leads:1.0,cpl:8813.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349991290 (763349991290)",status:"",link:"",cost:8549.45,leads:4.0,cpl:2137.36,threeplus:1.0,cpThreeplus:8549.45,wanted:null,cpWanted:null,sales:1.0,cpSale:8549.45,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC9_AnthonyReed | SV3_GmailWhite",status:"Loser",link:"",cost:6133.97,leads:75.0,cpl:81.79,threeplus:37.0,cpThreeplus:165.78,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.83,ctrLink:6.13,cpm:36.85,impressions:166449.0},
+{name:"SC9_AnthonyReed | SV3_GmailWhite | Approved States",status:"",link:"",cost:4947.04,leads:71.0,cpl:69.68,threeplus:35.0,cpThreeplus:141.34,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.0,ctrLink:2.96,cpm:43.85,impressions:53244.0},
+{name:"Ad 776690530313 (776690530313)",status:"",link:"",cost:4738.12,leads:1.0,cpl:4738.12,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC7_MiaThompson | SV3_GmailWhite | Approved States",status:"",link:"",cost:4693.15,leads:58.0,cpl:80.92,threeplus:31.0,cpThreeplus:151.39,wanted:1.0,cpWanted:4693.15,sales:1.0,cpSale:4693.15,ctrAll:8.84,ctrLink:9.49,cpm:31.52,impressions:84941.0},
+{name:"SC6_DavidKim | SV3_GmailWhite",status:"Winner",link:"",cost:4557.18,leads:55.0,cpl:82.86,threeplus:19.0,cpThreeplus:239.85,wanted:3.0,cpWanted:1519.06,sales:3.0,cpSale:1519.06,ctrAll:1.51,ctrLink:1.18,cpm:44.99,impressions:101289.0},
+{name:"SC32_AllenMrLopezNoDate | SV29_CheckDisclaimer",status:"Testing",link:"",cost:4356.09,leads:33.0,cpl:132.0,threeplus:29.0,cpThreeplus:150.21,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.89,ctrLink:1.49,cpm:34.8,impressions:46607.0},
+{name:"Ad 739131468223 (739131468223)",status:"",link:"",cost:4010.44,leads:2.0,cpl:2005.22,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:4010.44,sales:1.0,cpSale:4010.44,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763227997896 (763227997896)",status:"",link:"",cost:3855.13,leads:3.0,cpl:1285.04,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776641992223 (776641992223)",status:"",link:"",cost:3825.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC2_MarkJensen | SV19_GmailWhiteDisclaimer",status:"Testing",link:"",cost:3729.36,leads:57.0,cpl:65.43,threeplus:35.0,cpThreeplus:106.55,wanted:1.0,cpWanted:3729.36,sales:1.0,cpSale:3729.36,ctrAll:4.63,ctrLink:4.78,cpm:38.7,impressions:43085.0},
+{name:"Ad 776500554929 (776500554929)",status:"",link:"",cost:3219.12,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC7_MiaThompson | SV9_GmailDarkES",status:"Testing",link:"",cost:3190.26,leads:21.0,cpl:151.92,threeplus:0.0,cpThreeplus:null,wanted:1.0,cpWanted:3190.26,sales:1.0,cpSale:3190.26,ctrAll:1.93,ctrLink:1.15,cpm:28.2,impressions:113111.0},
+{name:"SC2_MarkJensen | SV2_GmailDark",status:"Testing",link:"",cost:3149.99,leads:39.0,cpl:80.77,threeplus:20.0,cpThreeplus:157.5,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:6.05,ctrLink:6.43,cpm:33.04,impressions:95353.0},
+{name:"SC8_MeganCollins | SV4_GmailWhiteAR",status:"Testing",link:"",cost:2949.25,leads:29.0,cpl:101.7,threeplus:8.0,cpThreeplus:368.66,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.67,ctrLink:0.93,cpm:10.84,impressions:219406.0},
+{name:"Ad 786311202238 (786311202238)",status:"",link:"",cost:2722.09,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC2_MarkJensen | SV2_GmailDark | Approved States",status:"",link:"",cost:2675.59,leads:34.0,cpl:78.69,threeplus:16.0,cpThreeplus:167.22,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.8,ctrLink:1.63,cpm:34.66,impressions:13691.0},
+{name:"SC21_CEO2 | SV31_RedditWhiteDisclaimer",status:"Testing",link:"",cost:2503.07,leads:24.0,cpl:104.29,threeplus:12.0,cpThreeplus:208.59,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.13,ctrLink:2.01,cpm:33.83,impressions:36647.0},
+{name:"SC20_LiamAnderson | SV30_TwitterDisclaimer",status:"Testing",link:"",cost:2475.85,leads:25.0,cpl:99.03,threeplus:13.0,cpThreeplus:190.45,wanted:1.0,cpWanted:2475.85,sales:0.0,cpSale:null,ctrAll:5.41,ctrLink:5.61,cpm:49.9,impressions:23870.0},
+{name:"SC10_CEO1 | SV10_RedditDarkAR",status:"Testing",link:"",cost:2453.21,leads:5.0,cpl:490.64,threeplus:2.0,cpThreeplus:1226.61,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.8,ctrLink:1.15,cpm:9.33,impressions:262914.0},
+{name:"SC10_CEO1 | SV32_RedditDarkARDisclaimer",status:"Testing",link:"",cost:2440.87,leads:18.0,cpl:135.6,threeplus:6.0,cpThreeplus:406.81,wanted:2.0,cpWanted:1220.43,sales:2.0,cpSale:1220.43,ctrAll:2.06,ctrLink:1.14,cpm:14.1,impressions:76778.0},
+{name:"Allen Check Static",status:"",link:"",cost:2422.7,leads:28.0,cpl:86.52,threeplus:15.0,cpThreeplus:161.51,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.64,ctrLink:1.04,cpm:35.23,impressions:300154.0},
+{name:"SC3_MarcusSmith | SV19_GmailWhiteDisclaimer",status:"Testing",link:"",cost:2332.06,leads:16.0,cpl:145.75,threeplus:9.0,cpThreeplus:259.12,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.24,ctrLink:4.26,cpm:46.36,impressions:50308.0},
+{name:"SC10_CEO1 | SV11_RedditDarkES",status:"Testing",link:"",cost:2162.17,leads:5.0,cpl:432.43,threeplus:0.0,cpThreeplus:null,wanted:1.0,cpWanted:2162.17,sales:0.0,cpSale:null,ctrAll:1.46,ctrLink:0.93,cpm:27.71,impressions:78034.0},
+{name:"SC2_MarkJensen | SV3_GmailWhite | Approved States",status:"",link:"",cost:2142.4,leads:30.0,cpl:71.41,threeplus:22.0,cpThreeplus:97.38,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.69,ctrLink:2.46,cpm:50.47,impressions:430068.0},
+{name:"SC5_MichelleKing | SV2_GmailDark",status:"Winner",link:"",cost:2135.72,leads:17.0,cpl:125.63,threeplus:7.0,cpThreeplus:305.1,wanted:2.0,cpWanted:1067.86,sales:2.0,cpSale:1067.86,ctrAll:2.65,ctrLink:2.5,cpm:39.06,impressions:54679.0},
+{name:"SC3_MarcusSmith | SV2_GmailDark",status:"Testing",link:"",cost:2128.21,leads:18.0,cpl:118.23,threeplus:12.0,cpThreeplus:177.35,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.9,ctrLink:2.83,cpm:37.98,impressions:56035.0},
+{name:"CLIENT - Twitter 6 Static - Dark | Trucking",status:"",link:"",cost:1944.8,leads:11.0,cpl:176.8,threeplus:5.0,cpThreeplus:388.96,wanted:2.0,cpWanted:972.4,sales:1.0,cpSale:1944.8,ctrAll:3.49,ctrLink:3.16,cpm:69.46,impressions:74429.0},
+{name:"SC7_MiaThompson | SV4_GmailWhiteAR",status:"Testing",link:"",cost:1652.27,leads:2.0,cpl:826.13,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.75,ctrLink:0.75,cpm:10.8,impressions:149805.0},
+{name:"SC9_AnthonyReed _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"",cost:1618.35,leads:22.0,cpl:73.56,threeplus:10.0,cpThreeplus:161.83,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:4.33,ctrLink:4.42,cpm:44.69,impressions:175072.0},
+{name:"Ad 776500560959 (776500560959)",status:"",link:"",cost:1570.57,leads:4.0,cpl:392.64,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC9_AnthonyReed | SV2_GmailDark | Approved States",status:"",link:"",cost:1548.94,leads:18.0,cpl:86.05,threeplus:11.0,cpThreeplus:140.81,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:5.17,ctrLink:5.26,cpm:52.07,impressions:565337.0},
+{name:"CEO - Reddit 1 Static - Dark",status:"",link:"",cost:1530.13,leads:13.0,cpl:117.7,threeplus:6.0,cpThreeplus:255.02,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:1.0},
+{name:"SC10_CEO1 | SV7_RedditWhiteES",status:"Testing",link:"",cost:1455.99,leads:4.0,cpl:364.0,threeplus:1.0,cpThreeplus:1455.99,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.61,ctrLink:0.79,cpm:7.8,impressions:181047.0},
+{name:"SC5_MichelleKing _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"",cost:1388.95,leads:16.0,cpl:86.81,threeplus:10.0,cpThreeplus:138.89,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:6.71,ctrLink:7.13,cpm:33.15,impressions:35242.0},
+{name:"SC10_CEO1 | SV6_RedditWhiteAR",status:"Testing",link:"",cost:1373.08,leads:12.0,cpl:114.42,threeplus:1.0,cpThreeplus:1373.08,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.5,ctrLink:0.8,cpm:8.9,impressions:154241.0},
+{name:"SC4_RachelTorres | SV2_GmailDark",status:"Testing",link:"",cost:1280.42,leads:10.0,cpl:128.04,threeplus:7.0,cpThreeplus:182.92,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.64,ctrLink:1.47,cpm:43.73,impressions:29282.0},
+{name:"SC8_MeganCollins | SV8_GmailDarkAR",status:"Testing",link:"",cost:1236.08,leads:15.0,cpl:82.41,threeplus:2.0,cpThreeplus:618.04,wanted:1.0,cpWanted:1236.08,sales:1.0,cpSale:1236.08,ctrAll:5.28,ctrLink:1.09,cpm:14.52,impressions:84780.0},
+{name:"SC19_AllenMrLopez | SV29_CheckDisclaimer",status:"Testing",link:"",cost:1097.0,leads:4.0,cpl:274.25,threeplus:4.0,cpThreeplus:274.25,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.76,ctrLink:1.32,cpm:31.31,impressions:17517.0},
+{name:"SC6_DavidKim | SV2_GmailDark | Approved States",status:"",link:"",cost:1047.38,leads:10.0,cpl:104.74,threeplus:7.0,cpThreeplus:149.63,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.78,ctrLink:2.47,cpm:41.41,impressions:222413.0},
+{name:"Ad 763263279757 (763263279757)",status:"",link:"",cost:1030.92,leads:1.0,cpl:1030.92,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:1030.92,sales:1.0,cpSale:1030.92,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC8_MeganCollins _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"",cost:1027.09,leads:11.0,cpl:93.37,threeplus:9.0,cpThreeplus:114.12,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.01,ctrLink:2.72,cpm:37.12,impressions:4192.0},
+{name:"SC3_MarcusSmith | SV19_GmailWhite | Approved States",status:"",link:"",cost:1024.46,leads:15.0,cpl:68.3,threeplus:11.0,cpThreeplus:93.13,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.89,ctrLink:1.53,cpm:30.3,impressions:617233.0},
+{name:"SC8_MeganCollins | SV3_GmailWhite | Approved States",status:"",link:"",cost:1002.03,leads:12.0,cpl:83.5,threeplus:10.0,cpThreeplus:100.2,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.36,ctrLink:1.88,cpm:33.0,impressions:413207.0},
+{name:"SC4_RachelTorres | SV3_GmailWhite",status:"Testing",link:"",cost:923.72,leads:4.0,cpl:230.93,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.03,ctrLink:1.89,cpm:42.73,impressions:21619.0},
+{name:"SC7_MiaThompson | SV8_GmailDarkAR",status:"Testing",link:"",cost:919.63,leads:1.0,cpl:919.63,threeplus:1.0,cpThreeplus:919.63,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.38,ctrLink:0.83,cpm:11.47,impressions:78395.0},
+{name:"Ad 786276479460 (786276479460)",status:"",link:"",cost:901.3,leads:1.0,cpl:901.3,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786276514056 (786276514056)",status:"",link:"",cost:889.07,leads:2.0,cpl:444.54,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC5_MichelleKing | SV3_GmailWhite | Approved States",status:"",link:"",cost:807.29,leads:10.0,cpl:80.73,threeplus:3.0,cpThreeplus:269.1,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.02,ctrLink:1.81,cpm:36.69,impressions:289941.0},
+{name:"Ad 786311993941 (786311993941)",status:"",link:"",cost:750.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776369478153 (776369478153)",status:"",link:"",cost:730.31,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC5_MichelleKing | SV21_GmailWhiteARDisclaimer",status:"Testing",link:"",cost:714.49,leads:12.0,cpl:59.54,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.24,ctrLink:1.77,cpm:9.38,impressions:35554.0},
+{name:"SC5_MichelleKing | SV8_GmailDarkAR",status:"Testing",link:"",cost:675.61,leads:1.0,cpl:675.61,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.49,ctrLink:0.59,cpm:10.23,impressions:61733.0},
+{name:"SC5_MichelleKing | SV4_GmailWhiteAR",status:"Testing",link:"",cost:632.47,leads:5.0,cpl:126.49,threeplus:2.0,cpThreeplus:316.24,wanted:1.0,cpWanted:632.47,sales:0.0,cpSale:null,ctrAll:3.32,ctrLink:0.92,cpm:10.49,impressions:60163.0},
+{name:"SC3_MarcusSmith | SV19_GmailWhiteDisclaimer | Approved States",status:"",link:"",cost:602.19,leads:6.0,cpl:100.37,threeplus:5.0,cpThreeplus:120.44,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:4.24,ctrLink:4.26,cpm:46.36,impressions:50308.0},
+{name:"SC7_MiaThompson | SV2_GmailDark",status:"Testing",link:"",cost:574.86,leads:4.0,cpl:143.72,threeplus:2.0,cpThreeplus:287.43,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.68,ctrLink:2.6,cpm:36.31,impressions:15832.0},
+{name:"Ad 763349982122 (763349982122)",status:"",link:"",cost:537.23,leads:4.0,cpl:134.31,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC8_MeganCollins | SV2_GmailDark",status:"Testing",link:"",cost:517.9,leads:4.0,cpl:129.48,threeplus:1.0,cpThreeplus:517.9,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.98,ctrLink:5.19,cpm:33.96,impressions:15250.0},
+{name:"SC3_MarcusSmith | SV2_GmailDark | Approved States",status:"",link:"",cost:516.56,leads:6.0,cpl:86.09,threeplus:5.0,cpThreeplus:103.31,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.9,ctrLink:2.83,cpm:37.98,impressions:56035.0},
+{name:"SC9_AnthonyReed | SV28_GmailDarkDisclaimer",status:"Testing",link:"",cost:494.55,leads:4.0,cpl:123.64,threeplus:0.0,cpThreeplus:null,wanted:2.0,cpWanted:247.28,sales:2.0,cpSale:247.28,ctrAll:3.91,ctrLink:3.96,cpm:33.35,impressions:7102.0},
+{name:"Ad 763349945672 (763349945672)",status:"",link:"",cost:482.04,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763228003890 (763228003890)",status:"",link:"",cost:481.87,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776500561082 (776500561082)",status:"",link:"",cost:467.26,leads:3.0,cpl:155.75,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 795119468618 (795119468618)",status:"",link:"",cost:466.68,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786274928832 (786274928832)",status:"",link:"",cost:461.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC8_MeganCollins | SV2_GmailDark | Approved States",status:"",link:"",cost:339.29,leads:3.0,cpl:113.1,threeplus:1.0,cpThreeplus:339.29,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.44,ctrLink:2.33,cpm:35.75,impressions:5417.0},
+{name:"Ad 786276482052 (786276482052)",status:"",link:"",cost:302.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC7_MiaThompson _ SV21_GmailWhiteARDisclaimer_1x1_FR",status:"",link:"",cost:279.34,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:279.34,sales:1.0,cpSale:279.34,ctrAll:4.52,ctrLink:1.35,cpm:9.83,impressions:69275.0},
+{name:"Ad 720591322247 (720591322247)",status:"",link:"",cost:191.18,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349977178 (763349977178)",status:"",link:"",cost:185.74,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763233245733 (763233245733)",status:"",link:"",cost:177.05,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC6_DavidKim | SV28_GmailDarkDisclaimer",status:"Testing",link:"",cost:172.97,leads:2.0,cpl:86.49,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.93,ctrLink:3.15,cpm:31.68,impressions:5460.0},
+{name:"Ad 763262806543 (763262806543)",status:"",link:"",cost:167.58,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC5_MichelleKing | SV2_GmailDark | Approved States",status:"",link:"",cost:145.86,leads:1.0,cpl:145.86,threeplus:1.0,cpThreeplus:145.86,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:11.92,ctrLink:12.76,cpm:47.31,impressions:2147.0},
+{name:"SC7_MiaThompson | SV2_GmailDark | Approved States",status:"",link:"",cost:121.98,leads:3.0,cpl:40.66,threeplus:2.0,cpThreeplus:60.99,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.68,ctrLink:2.6,cpm:36.31,impressions:15832.0},
+{name:"SC5_MichelleKing _ SV8_GmailDarkAR_1x1_FR",status:"",link:"",cost:111.11,leads:1.0,cpl:111.11,threeplus:1.0,cpThreeplus:111.11,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.7,ctrLink:1.1,cpm:13.48,impressions:38207.0},
+{name:"Ad 786276480615 (786276480615)",status:"",link:"",cost:64.15,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC10_CEO1 _ SV22_RedditWhiteARDisclaimer_1x1_FR",status:"",link:"",cost:62.84,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.07,ctrLink:0.8,cpm:9.87,impressions:134921.0},
+{name:"Ad 763228004046 (763228004046)",status:"",link:"",cost:59.19,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Graphic 4 Static",status:"",link:"",cost:56.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.93,ctrLink:0.47,cpm:111.42,impressions:3216.0},
+{name:"CEO - Reddit 1 Static - White",status:"",link:"",cost:34.23,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.89,ctrLink:0.62,cpm:16.26,impressions:149971.0},
+{name:"SC6_DavidKim | SV28_GmailDarkDisclaimer | Approved States",status:"",link:"",cost:25.39,leads:1.0,cpl:25.39,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.93,ctrLink:3.15,cpm:31.68,impressions:5460.0},
+{name:"CLIENT - Twitter 2 Static - White",status:"",link:"",cost:13.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.96,ctrLink:0.69,cpm:63.56,impressions:10305.0},
+{name:"Ad 776500575284 (776500575284)",status:"",link:"",cost:7.78,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 720510957289 (720510957289)",status:"",link:"",cost:0.69,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"CEO - Reddit 3 Static - Dark | Trucking",status:"",link:"",cost:0.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.66,ctrLink:0.38,cpm:9.47,impressions:95430.0},
+{name:"CLIENT - Twitter 3 Static - White",status:"",link:"",cost:0.02,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.02,ctrLink:0.89,cpm:18.06,impressions:57871.0}],
+  video:[{name:"Ali Video 5 - Mr Sanchez - Relaunch",status:"",link:"",cost:17601.22,leads:235.0,cpl:74.9,threeplus:1.0,cpThreeplus:17601.22,wanted:5.0,cpWanted:3520.24,sales:2.0,cpSale:8800.61,ctrAll:1.05,ctrLink:0.68,cpm:21.88,impressions:4027294.0},
+{name:"Ali Video 5 - Mr Sanchez",status:"",link:"",cost:17308.57,leads:270.0,cpl:64.11,threeplus:1.0,cpThreeplus:17308.57,wanted:9.0,cpWanted:1923.17,sales:8.0,cpSale:2163.57,ctrAll:1.05,ctrLink:0.68,cpm:21.88,impressions:4027294.0},
+{name:"Arabic Video 2",status:"",link:"",cost:12925.79,leads:149.0,cpl:86.75,threeplus:44.0,cpThreeplus:293.77,wanted:20.0,cpWanted:646.29,sales:17.0,cpSale:760.34,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"VHK25_GotACheck | VB18_GotmeaCheck | VV17_AliDevonteCollab",status:"Winner",link:"",cost:12367.66,leads:176.0,cpl:70.27,threeplus:77.0,cpThreeplus:160.62,wanted:13.0,cpWanted:951.36,sales:10.0,cpSale:1236.77,ctrAll:2.07,ctrLink:1.58,cpm:43.34,impressions:255204.0},
+{name:"VHK28_IDidEverything | VB20_NoDoubtAtAll | VV17_AliDevonteCollab",status:"Testing",link:"",cost:5937.1,leads:81.0,cpl:73.3,threeplus:41.0,cpThreeplus:144.81,wanted:2.0,cpWanted:2968.55,sales:2.0,cpSale:2968.55,ctrAll:3.52,ctrLink:2.26,cpm:63.81,impressions:79627.0},
+{name:"VHK29_PickUpSettlement | VB21_SettlementCheck | VV17_AliDevonteCollab",status:"Testing",link:"",cost:5868.72,leads:110.0,cpl:53.35,threeplus:64.0,cpThreeplus:91.7,wanted:3.0,cpWanted:1956.24,sales:2.0,cpSale:2934.36,ctrAll:2.38,ctrLink:1.93,cpm:40.62,impressions:97048.0},
+{name:"Arabic Video 1v2 | Approved States",status:"",link:"",cost:5750.49,leads:56.0,cpl:102.69,threeplus:18.0,cpThreeplus:319.47,wanted:4.0,cpWanted:1437.62,sales:3.0,cpSale:1916.83,ctrAll:1.96,ctrLink:1.32,cpm:21.33,impressions:1175554.0},
+{name:"Farzy Collab - Story Body 1 - CID3KFSHLN",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=BIG+Check002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:4830.74,leads:69.0,cpl:70.01,threeplus:31.0,cpThreeplus:155.83,wanted:8.0,cpWanted:603.84,sales:2.0,cpSale:2415.37,ctrAll:3.05,ctrLink:2.71,cpm:24.75,impressions:96107.0},
+{name:"Farzy Collab - Story Lead 1 - CID38MIWQ0",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v1+Extra+Version001.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:4589.75,leads:41.0,cpl:111.95,threeplus:19.0,cpThreeplus:241.57,wanted:2.0,cpWanted:2294.88,sales:0.0,cpSale:null,ctrAll:1.75,ctrLink:1.56,cpm:24.28,impressions:81569.0},
+{name:"VHK31_HowCarLooksLike | VB23_BigCheck | VV18_AliFarzyCollab",status:"Winner",link:"",cost:4393.07,leads:62.0,cpl:70.86,threeplus:22.0,cpThreeplus:199.68,wanted:11.0,cpWanted:399.37,sales:7.0,cpSale:627.58,ctrAll:2.42,ctrLink:1.38,cpm:22.55,impressions:108255.0},
+{name:"Arabic Video 1v2",status:"",link:"",cost:4366.65,leads:41.0,cpl:106.5,threeplus:6.0,cpThreeplus:727.77,wanted:5.0,cpWanted:873.33,sales:3.0,cpSale:1455.55,ctrAll:1.96,ctrLink:1.32,cpm:21.33,impressions:1175554.0},
+{name:"VHK35_WeHaveInsurance | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"",cost:4108.56,leads:54.0,cpl:76.08,threeplus:28.0,cpThreeplus:146.73,wanted:4.0,cpWanted:1027.14,sales:4.0,cpSale:1027.14,ctrAll:22.95,ctrLink:25.57,cpm:53.57,impressions:40144.0},
+{name:"VHK34_WhySpendingMoney | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"",cost:3983.55,leads:56.0,cpl:71.13,threeplus:27.0,cpThreeplus:147.54,wanted:2.0,cpWanted:1991.78,sales:2.0,cpSale:1991.78,ctrAll:5.11,ctrLink:4.4,cpm:27.72,impressions:92200.0},
+{name:"Truck Video - FB | Trucking",status:"",link:"",cost:3906.5,leads:65.0,cpl:60.1,threeplus:31.0,cpThreeplus:126.02,wanted:2.0,cpWanted:1953.25,sales:1.0,cpSale:3906.5,ctrAll:1.56,ctrLink:0.98,cpm:21.18,impressions:961538.0},
+{name:"Arabic Video 3 | Approved States",status:"",link:"",cost:3414.69,leads:27.0,cpl:126.47,threeplus:9.0,cpThreeplus:379.41,wanted:1.0,cpWanted:3414.69,sales:1.0,cpSale:3414.69,ctrAll:1.31,ctrLink:0.59,cpm:18.51,impressions:601824.0},
+{name:"VHK33_YouDontBuyLawyer | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"",cost:2681.88,leads:55.0,cpl:48.76,threeplus:24.0,cpThreeplus:111.75,wanted:7.0,cpWanted:383.13,sales:7.0,cpSale:383.13,ctrAll:1.91,ctrLink:0.42,cpm:14.27,impressions:131189.0},
+{name:"VHK1_Testi_AllenEn | VB1_Testi_AllenEn | VV5_Testi_AllenSp",status:"",link:"",cost:2672.59,leads:6.0,cpl:445.43,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.08,ctrLink:2.9,cpm:43.46,impressions:49570.0},
+{name:"Farzy Collab - Story Lead 2 - CIDY1XVGL3",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v1002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:2556.35,leads:18.0,cpl:142.02,threeplus:10.0,cpThreeplus:255.63,wanted:10.0,cpWanted:255.63,sales:4.0,cpSale:639.09,ctrAll:3.78,ctrLink:3.69,cpm:42.08,impressions:29640.0},
+{name:"Testimonial | Nationwide",status:"",link:"",cost:2054.99,leads:37.0,cpl:55.54,threeplus:24.0,cpThreeplus:85.62,wanted:3.0,cpWanted:685.0,sales:2.0,cpSale:1027.49,ctrAll:2.52,ctrLink:1.98,cpm:84.08,impressions:525981.0},
+{name:"VHK21_ArabicPodcastAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"",cost:1805.73,leads:9.0,cpl:200.64,threeplus:4.0,cpThreeplus:451.43,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:6.91,ctrLink:3.39,cpm:17.6,impressions:87093.0},
+{name:"Farzy Collab - Story Lead 3 - CID5YVR7PI",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v2002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:1655.65,leads:10.0,cpl:165.56,threeplus:6.0,cpThreeplus:275.94,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:18.36,ctrLink:20.26,cpm:81.11,impressions:10081.0},
+{name:"VHK30_Awww | VB22_WhyDoNeedCrutches | VV17_AliDevonteCollab",status:"Winner",link:"",cost:1637.18,leads:12.0,cpl:136.43,threeplus:6.0,cpThreeplus:272.86,wanted:3.0,cpWanted:545.73,sales:2.0,cpSale:818.59,ctrAll:25.13,ctrLink:28.69,cpm:52.53,impressions:19060.0},
+{name:"VHK24_PickUpCheck | VB17_BabyMamaCheck | VV17_AliDevonteCollab",status:"Testing",link:"",cost:1633.06,leads:24.0,cpl:68.04,threeplus:12.0,cpThreeplus:136.09,wanted:2.0,cpWanted:816.53,sales:2.0,cpSale:816.53,ctrAll:25.91,ctrLink:28.0,cpm:66.58,impressions:12566.0},
+{name:"Arabic Video 3",status:"",link:"",cost:1491.15,leads:12.0,cpl:124.26,threeplus:1.0,cpThreeplus:1491.15,wanted:2.0,cpWanted:745.58,sales:2.0,cpSale:745.58,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Arabic Video 4 | Approved States",status:"",link:"",cost:1445.74,leads:9.0,cpl:160.64,threeplus:5.0,cpThreeplus:289.15,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.77,ctrLink:1.68,cpm:18.4,impressions:263062.0},
+{name:"VHK32_BetterPayforThis | VB24_JustGotRear | VV18_AliFarzyCollab",status:"Testing",link:"",cost:1438.39,leads:15.0,cpl:95.89,threeplus:9.0,cpThreeplus:159.82,wanted:1.0,cpWanted:1438.39,sales:0.0,cpSale:null,ctrAll:8.38,ctrLink:8.81,cpm:44.16,impressions:21765.0},
+{name:"VHK20_YoucanSwitchLawyerAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"",cost:1260.37,leads:4.0,cpl:315.09,threeplus:3.0,cpThreeplus:420.12,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.79,ctrLink:3.48,cpm:20.03,impressions:55393.0},
+{name:"Arabic Video 1v1",status:"",link:"",cost:1175.33,leads:15.0,cpl:78.36,threeplus:3.0,cpThreeplus:391.78,wanted:1.0,cpWanted:1175.33,sales:null,cpSale:null,ctrAll:1.97,ctrLink:1.12,cpm:20.36,impressions:885523.0},
+{name:"Arabic Video 1v1 | Approved States",status:"",link:"",cost:1139.35,leads:14.0,cpl:81.38,threeplus:7.0,cpThreeplus:162.76,wanted:1.0,cpWanted:1139.35,sales:1.0,cpSale:1139.35,ctrAll:1.97,ctrLink:1.12,cpm:20.36,impressions:885523.0},
+{name:"VHK22_BabaJustGotAccidentAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"",cost:983.4,leads:0.0,cpl:null,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.75,ctrLink:3.88,cpm:18.19,impressions:51276.0},
+{name:"VHK27_CommercialPolicy | VB19_LoveoftheGame | VV17_AliDevonteCollab",status:"Testing",link:"",cost:722.69,leads:12.0,cpl:60.22,threeplus:6.0,cpThreeplus:120.45,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:22.2,ctrLink:24.85,cpm:69.35,impressions:5891.0},
+{name:"Arabic Video 4",status:"",link:"",cost:679.61,leads:2.0,cpl:339.81,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"AliFaroukieAR - Story Body - CIDNDF8G34",status:"",link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+1+-+Arabic+captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:584.9,leads:13.0,cpl:44.99,threeplus:10.0,cpThreeplus:58.49,wanted:1.0,cpWanted:584.9,sales:1.0,cpSale:584.9,ctrAll:2.52,ctrLink:1.16,cpm:16.96,impressions:34961.0},
+{name:"Truck Video - IG | Trucking",status:"",link:"",cost:381.33,leads:2.0,cpl:190.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.58,ctrLink:0.34,cpm:32.2,impressions:8483.0},
+{name:"Farzy Collab - Story Body - CID9WJBX93",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=just+got+rear+ended+002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:374.07,leads:2.0,cpl:187.03,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.6,ctrLink:4.73,cpm:47.51,impressions:3894.0},
+{name:"Ali Video English 50 Million (Long)",status:"",link:"",cost:294.67,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.66,ctrLink:0.5,cpm:21.67,impressions:86030.0},
+{name:"VHK19_BabaJustGotAccident | VB14_CEOBody | VV15_AliFaroukie",status:"Testing",link:"",cost:248.13,leads:0.0,cpl:null,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.49,ctrLink:2.1,cpm:27.91,impressions:8814.0},
+{name:"VHK23_YouSayWhat | VB16_InsuranceScam | VV17_AliDevonteCollab",status:"Testing",link:"",cost:220.5,leads:1.0,cpl:220.5,threeplus:1.0,cpThreeplus:220.5,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.9,ctrLink:1.56,cpm:52.7,impressions:4097.0},
+{name:"AliFaroukieAR - Story Body - CIDIZT0WCF",status:"",link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+3+-+Arabic+Captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:202.45,leads:6.0,cpl:33.74,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.07,ctrLink:0.89,cpm:16.9,impressions:12105.0},
+{name:"Arabic Video 1v1 | Ohio",status:"",link:"",cost:167.56,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.22,ctrLink:2.45,cpm:13.09,impressions:84353.0},
+{name:"Arabic Video 4 | Ohio",status:"",link:"",cost:144.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:6.47,ctrLink:2.61,cpm:13.18,impressions:88298.0}],
+  staticConcepts:[{name:"MiaThompson",variations:8,link:"",cost:60747.17,leads:750.0,cpl:81.0,threeplus:372.0,cpThreeplus:163.3,wanted:23.0,cpWanted:2641.18,sales:17.0,cpSale:3573.36,ctrAll:null,ctrLink:null,cpm:40.3,impressions:1507262.0},
+{name:"MeganCollins",variations:8,link:"",cost:47924.49,leads:609.0,cpl:78.69,threeplus:261.0,cpThreeplus:183.62,wanted:25.0,cpWanted:1916.98,sales:20.0,cpSale:2396.22,ctrAll:null,ctrLink:null,cpm:22.76,impressions:2105627.0},
+{name:"AnthonyReed",variations:5,link:"",cost:42564.1,leads:479.0,cpl:88.86,threeplus:193.0,cpThreeplus:220.54,wanted:5.0,cpWanted:8512.82,sales:5.0,cpSale:8512.82,ctrAll:null,ctrLink:null,cpm:31.36,impressions:1357469.0},
+{name:"MarkJensen",variations:5,link:"",cost:33401.9,leads:404.0,cpl:82.68,threeplus:209.0,cpThreeplus:159.82,wanted:8.0,cpWanted:4175.24,sales:6.0,cpSale:5566.98,ctrAll:null,ctrLink:null,cpm:33.0,impressions:1012265.0},
+{name:"CEO1",variations:6,link:"",cost:25410.74,leads:251.0,cpl:101.24,threeplus:141.0,cpThreeplus:180.22,wanted:24.0,cpWanted:1058.78,sales:14.0,cpSale:1815.05,ctrAll:null,ctrLink:null,cpm:29.48,impressions:861902.0},
+{name:"Truck Ad 2 1x1 - Disclaimer updated",variations:1,link:"",cost:18707.75,leads:231.0,cpl:80.99,threeplus:135.0,cpThreeplus:138.58,wanted:15.0,cpWanted:1247.18,sales:9.0,cpSale:2078.64,ctrAll:null,ctrLink:null,cpm:33.51,impressions:558307.0},
+{name:"CEO - Reddit 2 Static - White",variations:1,link:"",cost:18252.49,leads:205.0,cpl:89.04,threeplus:105.0,cpThreeplus:173.83,wanted:7.0,cpWanted:2607.5,sales:6.0,cpSale:3042.08,ctrAll:null,ctrLink:null,cpm:43.37,impressions:420868.0},
+{name:"MichelleKing",variations:7,link:"",cost:16264.89,leads:157.0,cpl:103.6,threeplus:51.0,cpThreeplus:318.92,wanted:6.0,cpWanted:2710.82,sales:5.0,cpSale:3252.98,ctrAll:null,ctrLink:null,cpm:20.16,impressions:806706.0},
+{name:"CEO2",variations:2,link:"",cost:15028.9,leads:205.0,cpl:73.31,threeplus:77.0,cpThreeplus:195.18,wanted:6.0,cpWanted:2504.82,sales:6.0,cpSale:2504.82,ctrAll:null,ctrLink:null,cpm:37.09,impressions:405229.0},
+{name:"DavidKim",variations:5,link:"",cost:15014.07,leads:159.0,cpl:94.43,threeplus:61.0,cpThreeplus:246.13,wanted:7.0,cpWanted:2144.87,sales:5.0,cpSale:3002.81,ctrAll:null,ctrLink:null,cpm:26.95,impressions:557035.0},
+{name:"Ad 763349980778 (763349980778)",variations:1,link:"",cost:8813.66,leads:1.0,cpl:8813.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349991290 (763349991290)",variations:1,link:"",cost:8549.45,leads:4.0,cpl:2137.36,threeplus:1.0,cpThreeplus:8549.45,wanted:null,cpWanted:null,sales:1.0,cpSale:8549.45,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"MarcusSmith",variations:5,link:"",cost:6603.48,leads:61.0,cpl:108.25,threeplus:42.0,cpThreeplus:157.23,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:7.96,impressions:829919.0},
+{name:"Ad 776690530313 (776690530313)",variations:1,link:"",cost:4738.12,leads:1.0,cpl:4738.12,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"AllenMrLopezNoDate",variations:1,link:"",cost:4356.09,leads:33.0,cpl:132.0,threeplus:29.0,cpThreeplus:150.21,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:93.46,impressions:46607.0},
+{name:"Ad 739131468223 (739131468223)",variations:1,link:"",cost:4010.44,leads:2.0,cpl:2005.22,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:4010.44,sales:1.0,cpSale:4010.44,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763227997896 (763227997896)",variations:1,link:"",cost:3855.13,leads:3.0,cpl:1285.04,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776641992223 (776641992223)",variations:1,link:"",cost:3825.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776500554929 (776500554929)",variations:1,link:"",cost:3219.12,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786311202238 (786311202238)",variations:1,link:"",cost:2722.09,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"LiamAnderson",variations:1,link:"",cost:2475.85,leads:25.0,cpl:99.03,threeplus:13.0,cpThreeplus:190.45,wanted:1.0,cpWanted:2475.85,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:103.72,impressions:23870.0},
+{name:"Allen Check Static",variations:1,link:"",cost:2422.7,leads:28.0,cpl:86.52,threeplus:15.0,cpThreeplus:161.51,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:8.07,impressions:300154.0},
+{name:"RachelTorres",variations:2,link:"",cost:2204.14,leads:14.0,cpl:157.44,threeplus:7.0,cpThreeplus:314.88,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:43.3,impressions:50901.0},
+{name:"CLIENT - Twitter 6 Static - Dark",variations:1,link:"",cost:1944.8,leads:11.0,cpl:176.8,threeplus:5.0,cpThreeplus:388.96,wanted:2.0,cpWanted:972.4,sales:1.0,cpSale:1944.8,ctrAll:null,ctrLink:null,cpm:26.13,impressions:74429.0},
+{name:"AnthonyReed _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"",cost:1618.35,leads:22.0,cpl:73.56,threeplus:10.0,cpThreeplus:161.83,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:9.24,impressions:175072.0},
+{name:"Ad 776500560959 (776500560959)",variations:1,link:"",cost:1570.57,leads:4.0,cpl:392.64,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"CEO",variations:2,link:"",cost:1564.36,leads:13.0,cpl:120.34,threeplus:6.0,cpThreeplus:260.73,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:10.43,impressions:149972.0},
+{name:"MichelleKing _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"",cost:1388.95,leads:16.0,cpl:86.81,threeplus:10.0,cpThreeplus:138.89,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:39.41,impressions:35242.0},
+{name:"AllenMrLopez",variations:1,link:"",cost:1097.0,leads:4.0,cpl:274.25,threeplus:4.0,cpThreeplus:274.25,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:62.62,impressions:17517.0},
+{name:"Ad 763263279757 (763263279757)",variations:1,link:"",cost:1030.92,leads:1.0,cpl:1030.92,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:1030.92,sales:1.0,cpSale:1030.92,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"MeganCollins _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"",cost:1027.09,leads:11.0,cpl:93.37,threeplus:9.0,cpThreeplus:114.12,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:245.01,impressions:4192.0},
+{name:"Ad 786276479460 (786276479460)",variations:1,link:"",cost:901.3,leads:1.0,cpl:901.3,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786276514056 (786276514056)",variations:1,link:"",cost:889.07,leads:2.0,cpl:444.54,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786311993941 (786311993941)",variations:1,link:"",cost:750.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776369478153 (776369478153)",variations:1,link:"",cost:730.31,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349982122 (763349982122)",variations:1,link:"",cost:537.23,leads:4.0,cpl:134.31,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349945672 (763349945672)",variations:1,link:"",cost:482.04,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763228003890 (763228003890)",variations:1,link:"",cost:481.87,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 776500561082 (776500561082)",variations:1,link:"",cost:467.26,leads:3.0,cpl:155.75,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 795119468618 (795119468618)",variations:1,link:"",cost:466.68,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786274928832 (786274928832)",variations:1,link:"",cost:461.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 786276482052 (786276482052)",variations:1,link:"",cost:302.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC7_MiaThompson _ SV21_GmailWhiteARDisclaimer_1x1_FR",variations:1,link:"",cost:279.34,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:279.34,sales:1.0,cpSale:279.34,ctrAll:null,ctrLink:null,cpm:4.03,impressions:69275.0},
+{name:"Ad 720591322247 (720591322247)",variations:1,link:"",cost:191.18,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763349977178 (763349977178)",variations:1,link:"",cost:185.74,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763233245733 (763233245733)",variations:1,link:"",cost:177.05,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 763262806543 (763262806543)",variations:1,link:"",cost:167.58,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC5_MichelleKing _ SV8_GmailDarkAR_1x1_FR",variations:1,link:"",cost:111.11,leads:1.0,cpl:111.11,threeplus:1.0,cpThreeplus:111.11,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:2.91,impressions:38207.0},
+{name:"Ad 786276480615 (786276480615)",variations:1,link:"",cost:64.15,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"SC10_CEO1 _ SV22_RedditWhiteARDisclaimer_1x1_FR",variations:1,link:"",cost:62.84,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.47,impressions:134921.0},
+{name:"Ad 763228004046 (763228004046)",variations:1,link:"",cost:59.19,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Graphic 4 Static",variations:1,link:"",cost:56.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:17.58,impressions:3216.0},
+{name:"CLIENT",variations:2,link:"",cost:13.56,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.2,impressions:68176.0},
+{name:"Ad 776500575284 (776500575284)",variations:1,link:"",cost:7.78,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Ad 720510957289 (720510957289)",variations:1,link:"",cost:0.69,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"CEO - Reddit 3 Static - Dark",variations:1,link:"",cost:0.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.0,impressions:95430.0}],
+  videoConcepts:[{name:"Ali Video 5",variations:2,link:"",cost:34909.79,leads:505.0,cpl:69.13,threeplus:2.0,cpThreeplus:17454.9,wanted:14.0,cpWanted:2493.56,sales:10.0,cpSale:3490.98,ctrAll:null,ctrLink:null,cpm:4.33,impressions:8054588.0},
+{name:"AliDevonteCollab",variations:7,link:"",cost:28386.91,leads:416.0,cpl:68.24,threeplus:207.0,cpThreeplus:137.13,wanted:23.0,cpWanted:1234.21,sales:18.0,cpSale:1577.05,ctrAll:null,ctrLink:null,cpm:59.95,impressions:473493.0},
+{name:"AliFarzyCollab",variations:5,link:"",cost:16605.45,leads:242.0,cpl:68.62,threeplus:110.0,cpThreeplus:150.96,wanted:25.0,cpWanted:664.22,sales:20.0,cpSale:830.27,ctrAll:null,ctrLink:null,cpm:42.19,impressions:393553.0},
+{name:"Farzy Collab",variations:5,link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=BIG+Check002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:14006.56,leads:140.0,cpl:100.05,threeplus:66.0,cpThreeplus:212.22,wanted:20.0,cpWanted:700.33,sales:6.0,cpSale:2334.43,ctrAll:null,ctrLink:null,cpm:63.29,impressions:221291.0},
+{name:"Arabic Video 2",variations:1,link:"",cost:12925.79,leads:149.0,cpl:86.75,threeplus:44.0,cpThreeplus:293.77,wanted:20.0,cpWanted:646.29,sales:17.0,cpSale:760.34,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
+{name:"Arabic Video 1v2",variations:2,link:"",cost:10117.14,leads:97.0,cpl:104.3,threeplus:24.0,cpThreeplus:421.55,wanted:9.0,cpWanted:1124.13,sales:6.0,cpSale:1686.19,ctrAll:null,ctrLink:null,cpm:4.3,impressions:2351108.0},
+{name:"Arabic Video 3",variations:2,link:"",cost:4905.84,leads:39.0,cpl:125.79,threeplus:10.0,cpThreeplus:490.58,wanted:3.0,cpWanted:1635.28,sales:3.0,cpSale:1635.28,ctrAll:null,ctrLink:null,cpm:8.15,impressions:601824.0},
+{name:"AliFaroukieAR",variations:5,link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+1+-+Arabic+captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:4836.85,leads:32.0,cpl:151.15,threeplus:17.0,cpThreeplus:284.52,wanted:1.0,cpWanted:4836.85,sales:1.0,cpSale:4836.85,ctrAll:null,ctrLink:null,cpm:20.08,impressions:240828.0},
+{name:"Truck Video - FB",variations:1,link:"",cost:3906.5,leads:65.0,cpl:60.1,threeplus:31.0,cpThreeplus:126.02,wanted:2.0,cpWanted:1953.25,sales:1.0,cpSale:3906.5,ctrAll:null,ctrLink:null,cpm:4.06,impressions:961538.0},
+{name:"Testi_AllenSp",variations:1,link:"",cost:2672.59,leads:6.0,cpl:445.43,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:53.92,impressions:49570.0},
+{name:"Arabic Video 1v1",variations:3,link:"",cost:2482.24,leads:29.0,cpl:85.59,threeplus:10.0,cpThreeplus:248.22,wanted:2.0,cpWanted:1241.12,sales:1.0,cpSale:2482.24,ctrAll:null,ctrLink:null,cpm:1.34,impressions:1855399.0},
+{name:"Arabic Video 4",variations:3,link:"",cost:2270.16,leads:11.0,cpl:206.38,threeplus:5.0,cpThreeplus:454.03,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:6.46,impressions:351360.0},
+{name:"Testimonial",variations:1,link:"",cost:2054.99,leads:37.0,cpl:55.54,threeplus:24.0,cpThreeplus:85.62,wanted:3.0,cpWanted:685.0,sales:2.0,cpSale:1027.49,ctrAll:null,ctrLink:null,cpm:3.91,impressions:525981.0},
+{name:"Truck Video - IG",variations:1,link:"",cost:381.33,leads:2.0,cpl:190.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:44.95,impressions:8483.0},
+{name:"Ali Video English 50 Million (Long)",variations:1,link:"",cost:294.67,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:3.43,impressions:86030.0},
+{name:"AliFaroukie",variations:1,link:"",cost:248.13,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:28.15,impressions:8814.0}]
+};
+
+let activeTab='static',sortCol='cost',sortDir=-1,filters={win:false,spend:false};
+
+function toggleFilter(f){filters[f]=!filters[f];document.getElementById('btn'+(f==='win'?'Win':'Spend')).classList.toggle('on');render()}
+
+function ccBadge(v,metric){
+  if(v==null||v===0)return'nd';
+  const k=KPI[metric];if(!k)return'nd';
+  return v<=k.green?'wk':v<=k.yellow?'of':'ak';
+}
+
+function fmt$(v){if(v==null)return'<span class="nd">—</span>';return'$'+v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function fmtSpend(v){if(v==null)return'<span class="nd">—</span>';return'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtN(v){if(v==null)return'<span class="nd">—</span>';return Math.round(v).toLocaleString()}
+function fmtPct(v){if(v==null)return'<span class="nd">—</span>';return v.toFixed(2)+'%'}
+
+function badge(v,metric){
+  if(v==null)return'<span class="nd">—</span>';
+  const c=ccBadge(v,metric);
+  return'<span class="'+c+'">'+fmt$(v)+'</span>';
+}
+
+function statusBadge(s){
+  if(!s)return'<span class="nd">—</span>';
+  const sl=s.toLowerCase();
+  let cls='st-testing';
+  if(sl==='winner')cls='st-winner';
+  else if(sl==='loser')cls='st-loser';
+  else if(sl.includes('fence'))cls='st-fence';
+  else if(sl==='paused'||sl==='past winner'||sl==='killed')cls='st-paused';
+  return'<span class="badge '+cls+'">'+s+'</span>';
+}
+
+function viewLink(link){
+  if(!link)return'<span class="nd">—</span>';
+  return'<a class="view" href="'+link+'" target="_blank" rel="noopener">View <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h7v7M10 2L2 10"/></svg></a>';
+}
+
+function buildTabs(){
+  const el=document.getElementById('tabs');
+  el.innerHTML=TABS.map(t=>'<div class="tab'+(t.id===activeTab?' active':'')+'" onclick="switchTab(\''+t.id+'\')">'+t.label+' <span class="cnt">('+t.count+')</span></div>').join('');
+}
+
+function switchTab(id){activeTab=id;sortCol='cost';sortDir=-1;buildTabs();render()}
+
+function render(){
+  const tab=TABS.find(t=>t.id===activeTab);
+  const isConcept=tab.concept;
+  let rows=[...DATA[activeTab]];
+  const q=document.getElementById('search').value.toLowerCase();
+  if(q)rows=rows.filter(r=>r.name.toLowerCase().includes(q));
+  if(filters.win)rows=rows.filter(r=>(r.status||'').toLowerCase()==='winner');
+  if(filters.spend)rows=rows.filter(r=>(r.cost||0)>=5000);
+  
+  rows.sort((a,b)=>{
+    let av=a[sortCol],bv=b[sortCol];
+    if(av==null&&bv==null)return 0;
+    if(av==null)return 1;if(bv==null)return-1;
+    return sortDir*(av-bv);
+  });
+  
+  const cols=[
+    {key:'idx',label:'#',sort:false},
+    {key:'name',label:'NAME',sort:false},
+    {key:'link',label:'AD',sort:false},
+    isConcept?{key:'variations',label:'# ADS',sort:true}:{key:'status',label:'STATUS',sort:false},
+    {key:'cost',label:'SPEND',sort:true},
+    {key:'leads',label:'LEADS',sort:true},
+    {key:'cpl',label:'CPL',sort:true},
+    {key:'threeplus',label:'3+ LEADS',sort:true},
+    {key:'cpThreeplus',label:'$/3+ LEAD',sort:true},
+    {key:'wanted',label:'WANTED',sort:true},
+    {key:'cpWanted',label:'$/WANTED',sort:true},
+    {key:'sales',label:'SALES',sort:true},
+    {key:'cpSale',label:'CPS',sort:true},
+    {key:'ctrAll',label:'CTR (ALL)',sort:true},
+    {key:'ctrLink',label:'CTR (LINK)',sort:true},
+    {key:'cpm',label:'CPM',sort:true},
+    {key:'impressions',label:'IMPR',sort:true}
+  ];
+  
+  let thead='<tr>';
+  cols.forEach(c=>{
+    const isSorted=c.key===sortCol;
+    const cls=(c.key==='idx'?'col-idx':(c.key==='name'?'col-name':''))+(isSorted?' sorted':'');
+    const arrow=c.sort?'<span class="arr">'+(isSorted?(sortDir>0?'▲':'▼'):'▲')+'</span>':'';
+    const click=c.sort?' onclick="doSort(\''+c.key+'\')"':'';
+    thead+='<th class="'+cls+'"'+click+'>'+c.label+arrow+'</th>';
+  });
+  thead+='</tr>';
+  
+  let tbody='';
+  rows.forEach((r,i)=>{
+    tbody+='<tr>';
+    cols.forEach(c=>{
+      const cls=c.key==='idx'?'col-idx':(c.key==='name'?'col-name':'');
+      let val='';
+      switch(c.key){
+        case'idx':val=i+1;break;
+        case'name':val=isConcept?r.name+' <span style="color:#64748B;font-size:11px">('+r.variations+' ads)</span>':r.name;break;
+        case'link':val=viewLink(r.link);break;
+        case'status':val=statusBadge(r.status);break;
+        case'variations':val=r.variations;break;
+        case'cost':val=fmtSpend(r.cost);break;
+        case'leads':val=fmtN(r.leads);break;
+        case'cpl':val=badge(r.cpl,'cpl');break;
+        case'threeplus':val=fmtN(r.threeplus);break;
+        case'cpThreeplus':val=badge(r.cpThreeplus,'cpThreeplus');break;
+        case'wanted':val=fmtN(r.wanted);break;
+        case'cpWanted':val=badge(r.cpWanted,'cpWanted');break;
+        case'sales':val=fmtN(r.sales);break;
+        case'cpSale':val=badge(r.cpSale,'cps');break;
+        case'ctrAll':val=fmtPct(r.ctrAll);break;
+        case'ctrLink':val=fmtPct(r.ctrLink);break;
+        case'cpm':val=r.cpm!=null?fmt$(r.cpm):'<span class="nd">—</span>';break;
+        case'impressions':val=fmtN(r.impressions);break;
+      }
+      tbody+='<td class="'+cls+'">'+val+'</td>';
+    });
+    tbody+='</tr>';
+  });
+  
+  document.getElementById('tblWrap').innerHTML='<table><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>';
+  document.getElementById('rowCount').textContent=rows.length+' of '+DATA[activeTab].length+' creatives';
+}
+
+function doSort(col){
+  if(sortCol===col)sortDir*=-1;
+  else{sortCol=col;sortDir=-1;}
+  render();
+}
+
+buildTabs();render();
+</script>
+</body>
+</html>
