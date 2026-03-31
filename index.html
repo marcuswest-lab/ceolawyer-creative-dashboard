@@ -4,365 +4,481 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CEO Lawyer Creative Performance Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0C0F14;color:#E2E8F0;font-family:'DM Sans',sans-serif;padding:24px 24px 48px;min-height:100vh}
+body{background:#0C0F14;color:#E2E8F0;font-family:'DM Sans',sans-serif;padding:24px 24px 48px}
 .wrap{max-width:1700px;margin:0 auto}
-h1{font-size:28px;font-weight:700;color:#F8FAFC;text-align:center}
-.sub{font-size:14px;color:#94A3B8;text-align:center;margin-top:4px}
-.legend{display:flex;justify-content:center;gap:24px;margin:14px 0 18px;font-size:12px;color:#94A3B8;flex-wrap:wrap}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
-.dot-g{background:#34D399}.dot-y{background:#FBBF24}.dot-r{background:#F87171}.dot-x{background:#475569}
-.controls{display:flex;gap:10px;margin-bottom:12px;align-items:center}
-.search{width:280px;padding:8px 12px;background:#151922;border:1px solid #334155;border-radius:8px;color:#E2E8F0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
-.search:focus{border-color:#3B82F6}
-.btn{padding:7px 16px;background:#151922;border:1px solid #334155;border-radius:8px;color:#94A3B8;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
-.btn:hover,.btn.on{background:#334155;color:#E2E8F0}
-.tabs{display:flex;width:fit-content;background:#151922;border-radius:10px;border:1px solid #1E293B;margin-bottom:14px;overflow:hidden}
-.tab{padding:10px 20px;font-size:13px;color:#64748B;cursor:pointer;border-right:1px solid #1E293B;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif}
+h1{font-size:28px;font-weight:700;color:#F8FAFC;text-align:center;margin-bottom:4px}
+.subtitle{font-size:14px;color:#94A3B8;text-align:center;margin-bottom:16px}
+.legend{display:flex;justify-content:center;gap:24px;font-size:12px;color:#94A3B8;margin-bottom:20px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot-g{background:#34D399}.dot-y{background:#FBBF24}.dot-r{background:#F87171}.dot-gr{background:#475569}
+.controls{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.search{width:280px;padding:8px 12px;background:#151922;border:1px solid #334155;border-radius:8px;color:#E2E8F0;font-size:13px;font-family:'DM Sans',sans-serif}
+.search::placeholder{color:#64748B}
+.search:focus{outline:none;border-color:#3B82F6}
+.fbtn{padding:6px 14px;border-radius:8px;border:1px solid #334155;background:transparent;color:#94A3B8;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.fbtn:hover{color:#CBD5E1;border-color:#475569}
+.fbtn.active{background:#334155;color:#E2E8F0;border-color:#475569}
+.tab-bar{display:flex;width:fit-content;background:#151922;border-radius:10px;border:1px solid #1E293B;margin-bottom:16px;overflow:hidden}
+.tab{padding:10px 20px;cursor:pointer;color:#64748B;font-size:13px;font-weight:500;border-right:1px solid #1E293B;transition:all .15s;white-space:nowrap;user-select:none}
 .tab:last-child{border-right:none}
 .tab:hover{color:#CBD5E1}
 .tab.active{background:#3B82F6;color:#fff}
-.tab .cnt{opacity:.6;margin-left:4px}
+.tab .cnt{opacity:.6;font-size:11px}
 .tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid #1E293B}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{background:#151922;color:#94A3B8;font-weight:600;text-align:left;padding:10px 12px;white-space:nowrap;position:sticky;top:0;z-index:11;cursor:pointer;user-select:none;font-family:'DM Sans',sans-serif;border-bottom:1px solid #1E293B}
-thead th .arr{font-size:10px;margin-left:3px;opacity:.3}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{position:sticky;top:0;background:#151922;color:#94A3B8;font-weight:600;padding:10px 10px;text-align:left;border-bottom:1px solid #1E293B;white-space:nowrap;cursor:pointer;user-select:none;z-index:10}
+thead th:hover{color:#CBD5E1}
+thead th .arr{font-size:10px;margin-left:3px;opacity:.4}
 thead th.sorted .arr{opacity:1;color:#3B82F6}
-tbody td{padding:8px 12px;border-bottom:1px solid #1E293B;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px}
+tbody td{padding:8px 10px;border-bottom:1px solid #1E293B;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:11px;color:#CBD5E1}
 tbody tr:hover td{background:#1a1f2e}
 .col-idx{position:sticky;left:0;z-index:5;background:#0C0F14;min-width:36px;text-align:center;color:#475569;font-size:11px}
-.col-name{position:sticky;left:36px;z-index:5;background:#0C0F14;min-width:340px;max-width:400px;font-family:'DM Sans',sans-serif;font-weight:500;color:#F8FAFC;font-size:13px;overflow:hidden;text-overflow:ellipsis}
-thead .col-idx{z-index:12;background:#151922}
-thead .col-name{z-index:12;background:#151922}
+.col-name{position:sticky;left:36px;z-index:5;background:#0C0F14;min-width:340px;max-width:400px;overflow:hidden;text-overflow:ellipsis;font-family:'DM Sans',sans-serif;font-weight:500;color:#F8FAFC;font-size:12px}
+thead .col-idx{z-index:11;background:#151922}
+thead .col-name{z-index:11;background:#151922}
 tbody tr:hover .col-idx,tbody tr:hover .col-name{background:#1a1f2e}
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif}
-.st-winner{background:rgba(52,211,153,.15);color:#34D399}
-.st-loser{background:rgba(248,113,113,.15);color:#F87171}
-.st-testing{background:rgba(96,165,250,.15);color:#60A5FA}
-.st-fence{background:rgba(251,191,36,.15);color:#FBBF24}
-.st-paused,.st-past,.st-killed{background:rgba(71,85,105,.15);color:#94A3B8}
-.wk{background:rgba(52,211,153,.15);color:#34D399;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
-.of{background:rgba(251,191,36,.15);color:#FBBF24;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
-.ak{background:rgba(248,113,113,.15);color:#F87171;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600}
 .nd{color:#475569}
-a.view{color:#60A5FA;font-family:'DM Sans',sans-serif;font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
-a.view:hover{color:#93C5FD}
-a.view svg{width:10px;height:10px}
-.row-count{text-align:right;color:#475569;font-size:12px;margin-top:6px}
+.wk{background:rgba(52,211,153,.15);color:#34D399;padding:3px 8px;border-radius:6px;font-weight:500}
+.of{background:rgba(251,191,36,.15);color:#FBBF24;padding:3px 8px;border-radius:6px;font-weight:500}
+.ak{background:rgba(248,113,113,.15);color:#F87171;padding:3px 8px;border-radius:6px;font-weight:500}
+.view-link{color:#60A5FA;text-decoration:none;font-family:'DM Sans',sans-serif;font-size:11px;display:inline-flex;align-items:center;gap:3px}
+.view-link:hover{color:#93C5FD}
+.view-link svg{width:11px;height:11px}
+.row-count{text-align:right;color:#475569;font-size:12px;margin-top:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
 <h1>CEO Lawyer Creative Performance Dashboard</h1>
-<div class="sub">CEO Lawyer &mdash; All-Time Performance Data | Generated March 25, 2026</div>
-<div class="legend" id="legend">
-  <span><span class="dot dot-g"></span>CPS &le; $2,000 | CPL &le; $100</span>
-  <span><span class="dot dot-y"></span>CPS $2,000&ndash;$2,500 | CPL $100&ndash;$150</span>
-  <span><span class="dot dot-r"></span>CPS &gt; $2,500 | CPL &gt; $150</span>
-  <span><span class="dot dot-x"></span>No Data</span>
-</div>
+<div class="subtitle">CEO Lawyer &mdash; All-Time Performance Data | Generated March 30, 2026</div>
+<div class="legend" id="legend"></div>
 <div class="controls">
-  <input class="search" id="search" placeholder="Search creatives..." oninput="render()">
-  <button class="btn" id="btnWin" onclick="toggleFilter('win')">Winners Only</button>
-  <button class="btn" id="btnSpend" onclick="toggleFilter('spend')">Min $5,000 Spend</button>
+<input class="search" id="search" placeholder="Search creatives..." type="text">
+<button class="fbtn" id="btnWinners" onclick="toggleFilter('winners')">Winners Only</button>
+<button class="fbtn" id="btnSpend" onclick="toggleFilter('spend')">Min $1,500 Spend</button>
 </div>
-<div class="tabs" id="tabs"></div>
-<div class="tbl-wrap" id="tblWrap"></div>
+<div class="tab-bar" id="tabBar"></div>
+<div class="tbl-wrap" id="tblWrap"><table id="tbl"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 <div class="row-count" id="rowCount"></div>
 </div>
 <script>
-const KPI={cps:{green:2000,yellow:2500},cpWanted:{green:750,yellow:1200},cpThreeplus:{green:200,yellow:350},cpl:{green:100,yellow:150},cpm:{green:30,yellow:50}};
-
-const TABS=[{id:"static",label:"Static Ads",count:101,concept:false},{id:"staticConcepts",label:"Static Concepts",count:56,concept:true},{id:"video",label:"Video Ads",count:41,concept:false},{id:"videoConcepts",label:"Video Concepts",count:16,concept:true}];
-
 const DATA={
-static:[
-{name:"SC9_AnthonyReed | SV2_GmailDark",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877687198572\u0026h=AQJ6DY9K1iS4mhnIaORa6vTunvs",cost:29439.6,leads:311.0,cpl:94.66,threeplus:110.0,cpThreeplus:267.63,wanted:3.0,cpWanted:9813.2,sales:3.0,cpSale:9813.2,ctrAll:5.17,ctrLink:5.26,cpm:52.07,impressions:565337.0},
-{name:"SC7_MiaThompson | SV3_GmailWhite",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877687199172\u0026h=AQJI01dGcpU5EzEdFfACndLaHnA",cost:28177.23,leads:331.0,cpl:85.13,threeplus:148.0,cpThreeplus:190.39,wanted:8.0,cpWanted:3522.15,sales:6.0,cpSale:4696.21,ctrAll:3.89,ctrLink:3.98,cpm:31.92,impressions:882677.0},
-{name:"SC2_MarkJensen | SV3_GmailWhite",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877686567772\u0026h=AQJnwAVXZMKCP8gagTT2TuV-PeM",cost:21704.56,leads:244.0,cpl:88.95,threeplus:116.0,cpThreeplus:187.11,wanted:7.0,cpWanted:3100.65,sales:5.0,cpSale:4340.91,ctrAll:2.69,ctrLink:2.46,cpm:50.47,impressions:430068.0},
-{name:"SC7_MiaThompson | SV19_GmailWhiteDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=19rmqvrIEEeNk6JoyzDi6xwlR0Ym6LCl8\u0026usp=drive_copy",cost:21417.79,leads:330.0,cpl:64.9,threeplus:188.0,cpThreeplus:113.92,wanted:13.0,cpWanted:1647.52,sales:9.0,cpSale:2379.75,ctrAll:8.12,ctrLink:8.46,cpm:56.08,impressions:166669.0},
-{name:"Truck Ad 2 1x1 - Disclaimer updated | Trucking Copy [? Hit by a Commercial Truck or Bus? You May Be Owed Significant Compensation! ] - 02-16-26",status:"",link:"",cost:18707.75,leads:231.0,cpl:80.99,threeplus:135.0,cpThreeplus:138.58,wanted:15.0,cpWanted:1247.18,sales:9.0,cpSale:2078.64,ctrAll:5.8,ctrLink:6.08,cpm:33.65,impressions:558307.0},
-{name:"CEO - Reddit 2 Static - White | Trucking",status:"",link:"https://www.facebook.com/?feed_demo_ad=6876900766172\u0026h=AQL0MyWMBBH5HnJu1h9bOOHvL9A",cost:18252.49,leads:205.0,cpl:89.04,threeplus:105.0,cpThreeplus:173.83,wanted:7.0,cpWanted:2607.5,sales:6.0,cpSale:3042.08,ctrAll:2.28,ctrLink:2.05,cpm:34.98,impressions:420868.0},
-{name:"SC8_MeganCollins | SV3_GmailWhite",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6877687197572\u0026h=AQIItbbJTCVq2UtkuMLF20nddvY",cost:16402.65,leads:187.0,cpl:87.71,threeplus:85.0,cpThreeplus:192.97,wanted:11.0,cpWanted:1491.15,sales:10.0,cpSale:1640.27,ctrAll:2.3,ctrLink:1.8,cpm:33.34,impressions:492007.0},
-{name:"SC10_CEO1 | SV27_RedditDarkDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1JLhlYldV1fxuo9IwJrKlaKwa73gVD8Q0\u0026usp=drive_copy",cost:15525.42,leads:207.0,cpl:75.0,threeplus:131.0,cpThreeplus:118.51,wanted:21.0,cpWanted:739.31,sales:12.0,cpSale:1293.79,ctrAll:5.36,ctrLink:5.42,cpm:61.75,impressions:108888.0},
-{name:"SC8_MeganCollins | SV23_GmailDarkARDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1vEe5RuOv-No2qza0JuKk8skZRPsZO9u5\u0026usp=drive_copy",cost:13941.31,leads:208.0,cpl:67.03,threeplus:84.0,cpThreeplus:165.97,wanted:6.0,cpWanted:2323.55,sales:4.0,cpSale:3485.33,ctrAll:3.02,ctrLink:1.12,cpm:13.89,impressions:481459.0},
-{name:"SC21_CEO2 | SV22_RedditWhiteARDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1t42T3KwHHm11gGJhFiz8A8BTsswe3AG4\u0026usp=drive_copy",cost:12525.83,leads:181.0,cpl:69.2,threeplus:65.0,cpThreeplus:192.71,wanted:6.0,cpWanted:2087.64,sales:6.0,cpSale:2087.64,ctrAll:2.25,ctrLink:1.1,cpm:16.0,impressions:368582.0},
-{name:"SC8_MeganCollins | SV21_GmailWhiteARDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1eGNmw01ddz2UoWnhGWc31rJiDjumXdLP\u0026usp=drive_copy",cost:11535.98,leads:151.0,cpl:76.4,threeplus:70.0,cpThreeplus:164.8,wanted:7.0,cpWanted:1648.0,sales:5.0,cpSale:2307.2,ctrAll:2.99,ctrLink:0.93,cpm:13.8,impressions:394101.0},
-{name:"SC5_MichelleKing | SV3_GmailWhite",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877687199572\u0026h=AQKyEwu4roKJy5BbFRdBX9lflEE",cost:11153.45,leads:111.0,cpl:100.48,threeplus:38.0,cpThreeplus:293.51,wanted:3.0,cpWanted:3717.82,sales:3.0,cpSale:3717.82,ctrAll:1.99,ctrLink:1.78,cpm:36.87,impressions:302489.0},
-{name:"SC6_DavidKim | SV2_GmailDark",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877687198972\u0026h=AQLhQWKOLMXSszHP6pvO3W7X5f0",cost:9211.15,leads:91.0,cpl:101.22,threeplus:35.0,cpThreeplus:263.18,wanted:4.0,cpWanted:2302.79,sales:2.0,cpSale:4605.58,ctrAll:2.78,ctrLink:2.47,cpm:41.41,impressions:222413.0},
-{name:"Ad 763349980778 (763349980778)",status:"",link:"",cost:8813.66,leads:1.0,cpl:8813.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349991290 (763349991290)",status:"",link:"",cost:8549.45,leads:4.0,cpl:2137.36,threeplus:1.0,cpThreeplus:8549.45,wanted:null,cpWanted:null,sales:1.0,cpSale:8549.45,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC9_AnthonyReed | SV3_GmailWhite",status:"Loser",link:"https://www.facebook.com/?feed_demo_ad=6877687195572\u0026h=AQKc9M-CBZyJePMk9u5vbIS-Vug",cost:6133.97,leads:75.0,cpl:81.79,threeplus:37.0,cpThreeplus:165.78,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.83,ctrLink:6.13,cpm:36.85,impressions:166449.0},
-{name:"SC9_AnthonyReed | SV3_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687195572\u0026h=AQKc9M-CBZyJePMk9u5vbIS-Vug",cost:4947.04,leads:71.0,cpl:69.68,threeplus:35.0,cpThreeplus:141.34,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.0,ctrLink:2.96,cpm:43.85,impressions:53244.0},
-{name:"Ad 776690530313 (776690530313)",status:"",link:"",cost:4738.12,leads:1.0,cpl:4738.12,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC7_MiaThompson | SV3_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687199172\u0026h=AQJI01dGcpU5EzEdFfACndLaHnA",cost:4693.15,leads:58.0,cpl:80.92,threeplus:31.0,cpThreeplus:151.39,wanted:1.0,cpWanted:4693.15,sales:1.0,cpSale:4693.15,ctrAll:8.84,ctrLink:9.49,cpm:31.52,impressions:84941.0},
-{name:"SC6_DavidKim | SV3_GmailWhite",status:"Winner",link:"https://drive.google.com/file/d/15Ldo7sCoKQaUhU_VSva1F55q6YBvs_Ec/view?usp=drive_link",cost:4557.18,leads:55.0,cpl:82.86,threeplus:19.0,cpThreeplus:239.85,wanted:3.0,cpWanted:1519.06,sales:3.0,cpSale:1519.06,ctrAll:1.51,ctrLink:1.18,cpm:44.99,impressions:101289.0},
-{name:"SC32_AllenMrLopezNoDate | SV29_CheckDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=12VHhfGcxTqHewHyg-_P02Y3u_XkqnUlF\u0026usp=drive_copy",cost:4356.09,leads:33.0,cpl:132.0,threeplus:29.0,cpThreeplus:150.21,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.89,ctrLink:1.49,cpm:34.8,impressions:46607.0},
-{name:"Ad 739131468223 (739131468223)",status:"",link:"",cost:4010.44,leads:2.0,cpl:2005.22,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:4010.44,sales:1.0,cpSale:4010.44,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763227997896 (763227997896)",status:"",link:"",cost:3855.13,leads:3.0,cpl:1285.04,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776641992223 (776641992223)",status:"",link:"",cost:3825.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC2_MarkJensen | SV19_GmailWhiteDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1SSGleQsV25KrLDngc4rM3nhCTOIJbADp\u0026usp=drive_copy",cost:3729.36,leads:57.0,cpl:65.43,threeplus:35.0,cpThreeplus:106.55,wanted:1.0,cpWanted:3729.36,sales:1.0,cpSale:3729.36,ctrAll:4.63,ctrLink:4.78,cpm:38.7,impressions:43085.0},
-{name:"Ad 776500554929 (776500554929)",status:"",link:"",cost:3219.12,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC7_MiaThompson | SV9_GmailDarkES",status:"Testing",link:"https://drive.google.com/open?id=1hYedxVJcZu0BrjxqnjajBvgwvZhvDdSp\u0026usp=drive_copy",cost:3190.26,leads:21.0,cpl:151.92,threeplus:0.0,cpThreeplus:null,wanted:1.0,cpWanted:3190.26,sales:1.0,cpSale:3190.26,ctrAll:1.93,ctrLink:1.15,cpm:28.2,impressions:113111.0},
-{name:"SC2_MarkJensen | SV2_GmailDark",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6877685451572\u0026h=AQLBofEO4dD7d9dJ7CzR_-K3qNY",cost:3149.99,leads:39.0,cpl:80.77,threeplus:20.0,cpThreeplus:157.5,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:6.05,ctrLink:6.43,cpm:33.04,impressions:95353.0},
-{name:"SC8_MeganCollins | SV4_GmailWhiteAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896441419572\u0026h=AQJM78wO4-6Mxg0vqye89oHqSBA",cost:2949.25,leads:29.0,cpl:101.7,threeplus:8.0,cpThreeplus:368.66,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.67,ctrLink:0.93,cpm:10.84,impressions:219406.0},
-{name:"Ad 786311202238 (786311202238)",status:"",link:"",cost:2722.09,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC2_MarkJensen | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877685451572\u0026h=AQLBofEO4dD7d9dJ7CzR_-K3qNY",cost:2675.59,leads:34.0,cpl:78.69,threeplus:16.0,cpThreeplus:167.22,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.8,ctrLink:1.63,cpm:34.66,impressions:13691.0},
-{name:"SC21_CEO2 | SV31_RedditWhiteDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1i8HUsY3dv4US7C6t8sbKzc-oaDgC9YtC\u0026usp=drive_copy",cost:2503.07,leads:24.0,cpl:104.29,threeplus:12.0,cpThreeplus:208.59,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.13,ctrLink:2.01,cpm:33.83,impressions:36647.0},
-{name:"SC20_LiamAnderson | SV30_TwitterDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1kcag_RxuKCt7cfQReeswR4cHEtElspiC\u0026usp=drive_copy",cost:2475.85,leads:25.0,cpl:99.03,threeplus:13.0,cpThreeplus:190.45,wanted:1.0,cpWanted:2475.85,sales:0.0,cpSale:null,ctrAll:5.41,ctrLink:5.61,cpm:49.9,impressions:23870.0},
-{name:"SC10_CEO1 | SV10_RedditDarkAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896443973172\u0026h=AQKHd6mRJe78mJuYG8aGPCxK_wA",cost:2453.21,leads:5.0,cpl:490.64,threeplus:2.0,cpThreeplus:1226.61,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.8,ctrLink:1.15,cpm:9.33,impressions:262914.0},
-{name:"SC10_CEO1 | SV32_RedditDarkARDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1B6OFQdGMLGNe-Lod21QGQZRqY4QEvw1Q\u0026usp=drive_copy",cost:2440.87,leads:18.0,cpl:135.6,threeplus:6.0,cpThreeplus:406.81,wanted:2.0,cpWanted:1220.43,sales:2.0,cpSale:1220.43,ctrAll:2.06,ctrLink:1.14,cpm:14.1,impressions:76778.0},
-{name:"Allen Check Static",status:"",link:"https://www.facebook.com/?feed_demo_ad=6892769207372\u0026h=AQLVhXReRA8KiyGCZnz-Lvpy7Bw",cost:2422.7,leads:28.0,cpl:86.52,threeplus:15.0,cpThreeplus:161.51,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.64,ctrLink:1.04,cpm:35.23,impressions:300154.0},
-{name:"SC3_MarcusSmith | SV19_GmailWhiteDisclaimer",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6924791387372\u0026h=AQKDuGq732Y_FVLv9ymm0COf0A4",cost:2332.06,leads:16.0,cpl:145.75,threeplus:9.0,cpThreeplus:259.12,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.24,ctrLink:4.26,cpm:46.36,impressions:50308.0},
-{name:"SC10_CEO1 | SV11_RedditDarkES",status:"Testing",link:"https://drive.google.com/open?id=1nJJctkv_6VPQ88n5JJrv1uwl6Qc2Rgb2\u0026usp=drive_copy",cost:2162.17,leads:5.0,cpl:432.43,threeplus:0.0,cpThreeplus:null,wanted:1.0,cpWanted:2162.17,sales:0.0,cpSale:null,ctrAll:1.46,ctrLink:0.93,cpm:27.71,impressions:78034.0},
-{name:"SC2_MarkJensen | SV3_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877686567772\u0026h=AQJnwAVXZMKCP8gagTT2TuV-PeM",cost:2142.4,leads:30.0,cpl:71.41,threeplus:22.0,cpThreeplus:97.38,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.69,ctrLink:2.46,cpm:50.47,impressions:430068.0},
-{name:"SC5_MichelleKing | SV2_GmailDark",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6877687198772\u0026h=AQIDJ2Xp-0ubrVLgAlxSjkyzHuQ",cost:2135.72,leads:17.0,cpl:125.63,threeplus:7.0,cpThreeplus:305.1,wanted:2.0,cpWanted:1067.86,sales:2.0,cpSale:1067.86,ctrAll:2.65,ctrLink:2.5,cpm:39.06,impressions:54679.0},
-{name:"SC3_MarcusSmith | SV2_GmailDark",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6877687197772\u0026h=AQJGoAffG97NhMarMPjpBWLBi7I",cost:2128.21,leads:18.0,cpl:118.23,threeplus:12.0,cpThreeplus:177.35,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.9,ctrLink:2.83,cpm:37.98,impressions:56035.0},
-{name:"CLIENT - Twitter 6 Static - Dark | Trucking",status:"",link:"https://www.facebook.com/?feed_demo_ad=6892769207772\u0026h=AQKbdQGynv9SdN19SwBzuxbMnDg",cost:1944.8,leads:11.0,cpl:176.8,threeplus:5.0,cpThreeplus:388.96,wanted:2.0,cpWanted:972.4,sales:1.0,cpSale:1944.8,ctrAll:3.49,ctrLink:3.16,cpm:69.46,impressions:74429.0},
-{name:"SC7_MiaThompson | SV4_GmailWhiteAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896440025372\u0026h=AQKA_gPXCwZTbgtiyB8_ayxHAwk",cost:1652.27,leads:2.0,cpl:826.13,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.75,ctrLink:0.75,cpm:10.8,impressions:149805.0},
-{name:"SC9_AnthonyReed _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913355787372\u0026h=AQLuRYF0-_22i1asoO3m8BWN2uQ",cost:1618.35,leads:22.0,cpl:73.56,threeplus:10.0,cpThreeplus:161.83,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:4.33,ctrLink:4.42,cpm:44.69,impressions:175072.0},
-{name:"Ad 776500560959 (776500560959)",status:"",link:"",cost:1570.57,leads:4.0,cpl:392.64,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC9_AnthonyReed | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687198572\u0026h=AQJ6DY9K1iS4mhnIaORa6vTunvs",cost:1548.94,leads:18.0,cpl:86.05,threeplus:11.0,cpThreeplus:140.81,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:5.17,ctrLink:5.26,cpm:52.07,impressions:565337.0},
-{name:"CEO - Reddit 1 Static - Dark",status:"",link:"https://www.facebook.com/?feed_demo_ad=6887948862572\u0026h=AQLJtJeR-wVyurVGsIOcyFG1SU0",cost:1530.13,leads:13.0,cpl:117.7,threeplus:6.0,cpThreeplus:255.02,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:1.0},
-{name:"SC10_CEO1 | SV7_RedditWhiteES",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896443613572\u0026h=AQJGb2X9rYqoAgJDb84gUg-E8zw",cost:1455.99,leads:4.0,cpl:364.0,threeplus:1.0,cpThreeplus:1455.99,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.61,ctrLink:0.79,cpm:7.8,impressions:181047.0},
-{name:"SC5_MichelleKing _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913351353572\u0026h=AQL-S7rleTN6SFan2MAFgQAa2t0",cost:1388.95,leads:16.0,cpl:86.81,threeplus:10.0,cpThreeplus:138.89,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:6.71,ctrLink:7.13,cpm:33.15,impressions:35242.0},
-{name:"SC10_CEO1 | SV6_RedditWhiteAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896443100172\u0026h=AQKipWsf6dWE-JXHWumUQWTlKuE",cost:1373.08,leads:12.0,cpl:114.42,threeplus:1.0,cpThreeplus:1373.08,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.5,ctrLink:0.8,cpm:8.9,impressions:154241.0},
-{name:"SC4_RachelTorres | SV2_GmailDark",status:"Testing",link:"https://drive.google.com/file/d/1CBxAN39loCxGgxCabRamtVzErpJmSljT/view?usp=drive_link",cost:1280.42,leads:10.0,cpl:128.04,threeplus:7.0,cpThreeplus:182.92,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.64,ctrLink:1.47,cpm:43.73,impressions:29282.0},
-{name:"SC8_MeganCollins | SV8_GmailDarkAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896441934372\u0026h=AQJ4vrQckHJSOEKyD6h89xAMEGs",cost:1236.08,leads:15.0,cpl:82.41,threeplus:2.0,cpThreeplus:618.04,wanted:1.0,cpWanted:1236.08,sales:1.0,cpSale:1236.08,ctrAll:5.28,ctrLink:1.09,cpm:14.52,impressions:84780.0},
-{name:"SC19_AllenMrLopez | SV29_CheckDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1oS3TtEkDY2rrzez6mRubl-bg967mvW_V\u0026usp=drive_copy",cost:1097.0,leads:4.0,cpl:274.25,threeplus:4.0,cpThreeplus:274.25,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.76,ctrLink:1.32,cpm:31.31,impressions:17517.0},
-{name:"SC6_DavidKim | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687198972\u0026h=AQLhQWKOLMXSszHP6pvO3W7X5f0",cost:1047.38,leads:10.0,cpl:104.74,threeplus:7.0,cpThreeplus:149.63,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.78,ctrLink:2.47,cpm:41.41,impressions:222413.0},
-{name:"Ad 763263279757 (763263279757)",status:"",link:"",cost:1030.92,leads:1.0,cpl:1030.92,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:1030.92,sales:1.0,cpSale:1030.92,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC8_MeganCollins _ SV19_GmailWhiteDisclaimer_1x1_FR | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913351012372\u0026h=AQKBIjnoOf4f1pVqXPnu161U538",cost:1027.09,leads:11.0,cpl:93.37,threeplus:9.0,cpThreeplus:114.12,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.01,ctrLink:2.72,cpm:37.12,impressions:4192.0},
-{name:"SC3_MarcusSmith | SV19_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687197172\u0026h=AQJoaOkVB_5X2SHifoC-ZW7FQlo",cost:1024.46,leads:15.0,cpl:68.3,threeplus:11.0,cpThreeplus:93.13,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.89,ctrLink:1.53,cpm:30.3,impressions:617233.0},
-{name:"SC8_MeganCollins | SV3_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687197572\u0026h=AQIItbbJTCVq2UtkuMLF20nddvY",cost:1002.03,leads:12.0,cpl:83.5,threeplus:10.0,cpThreeplus:100.2,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.36,ctrLink:1.88,cpm:33.0,impressions:413207.0},
-{name:"SC4_RachelTorres | SV3_GmailWhite",status:"Testing",link:"https://drive.google.com/file/d/1AHktXpkGXZHcGjFXzn-2jK5SWPl3iWRU/view?usp=drive_link",cost:923.72,leads:4.0,cpl:230.93,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.03,ctrLink:1.89,cpm:42.73,impressions:21619.0},
-{name:"SC7_MiaThompson | SV8_GmailDarkAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896440580572\u0026h=AQIWWJcmweJzx3usNaiA5t32ycU",cost:919.63,leads:1.0,cpl:919.63,threeplus:1.0,cpThreeplus:919.63,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.38,ctrLink:0.83,cpm:11.47,impressions:78395.0},
-{name:"Ad 786276479460 (786276479460)",status:"",link:"",cost:901.3,leads:1.0,cpl:901.3,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786276514056 (786276514056)",status:"",link:"",cost:889.07,leads:2.0,cpl:444.54,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC5_MichelleKing | SV3_GmailWhite | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687199572\u0026h=AQKyEwu4roKJy5BbFRdBX9lflEE",cost:807.29,leads:10.0,cpl:80.73,threeplus:3.0,cpThreeplus:269.1,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.02,ctrLink:1.81,cpm:36.69,impressions:289941.0},
-{name:"Ad 786311993941 (786311993941)",status:"",link:"",cost:750.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776369478153 (776369478153)",status:"",link:"",cost:730.31,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC5_MichelleKing | SV21_GmailWhiteARDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1kzLPDXyUnjluTDSUlwAve6FccQBU1k5e\u0026usp=drive_copy",cost:714.49,leads:12.0,cpl:59.54,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.24,ctrLink:1.77,cpm:9.38,impressions:35554.0},
-{name:"SC5_MichelleKing | SV8_GmailDarkAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896439570972\u0026h=AQJ0JHztdnJYsrbDQ87ZQJZCxc8",cost:675.61,leads:1.0,cpl:675.61,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.49,ctrLink:0.59,cpm:10.23,impressions:61733.0},
-{name:"SC5_MichelleKing | SV4_GmailWhiteAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6896254262572\u0026h=AQIz9KNnoJn9a4OtBx83N921_r8",cost:632.47,leads:5.0,cpl:126.49,threeplus:2.0,cpThreeplus:316.24,wanted:1.0,cpWanted:632.47,sales:0.0,cpSale:null,ctrAll:3.32,ctrLink:0.92,cpm:10.49,impressions:60163.0},
-{name:"SC3_MarcusSmith | SV19_GmailWhiteDisclaimer | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6924791387372\u0026h=AQKDuGq732Y_FVLv9ymm0COf0A4",cost:602.19,leads:6.0,cpl:100.37,threeplus:5.0,cpThreeplus:120.44,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:4.24,ctrLink:4.26,cpm:46.36,impressions:50308.0},
-{name:"SC7_MiaThompson | SV2_GmailDark",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6877687196572\u0026h=AQLf--CatGnmZmqUCjRY46nZH0U",cost:574.86,leads:4.0,cpl:143.72,threeplus:2.0,cpThreeplus:287.43,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.68,ctrLink:2.6,cpm:36.31,impressions:15832.0},
-{name:"Ad 763349982122 (763349982122)",status:"",link:"",cost:537.23,leads:4.0,cpl:134.31,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC8_MeganCollins | SV2_GmailDark",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6877687197972\u0026h=AQILgvtbRC2V0gbsxZ5kkIKxGIE",cost:517.9,leads:4.0,cpl:129.48,threeplus:1.0,cpThreeplus:517.9,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.98,ctrLink:5.19,cpm:33.96,impressions:15250.0},
-{name:"SC3_MarcusSmith | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687197772\u0026h=AQJGoAffG97NhMarMPjpBWLBi7I",cost:516.56,leads:6.0,cpl:86.09,threeplus:5.0,cpThreeplus:103.31,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.9,ctrLink:2.83,cpm:37.98,impressions:56035.0},
-{name:"SC9_AnthonyReed | SV28_GmailDarkDisclaimer",status:"Testing",link:"https://drive.google.com/open?id=1hw3p6Rrsp6VOxJ8TXttDxO23vvS5Wjal\u0026usp=drive_copy",cost:494.55,leads:4.0,cpl:123.64,threeplus:0.0,cpThreeplus:null,wanted:2.0,cpWanted:247.28,sales:2.0,cpSale:247.28,ctrAll:3.91,ctrLink:3.96,cpm:33.35,impressions:7102.0},
-{name:"Ad 763349945672 (763349945672)",status:"",link:"",cost:482.04,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763228003890 (763228003890)",status:"",link:"",cost:481.87,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776500561082 (776500561082)",status:"",link:"",cost:467.26,leads:3.0,cpl:155.75,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 795119468618 (795119468618)",status:"",link:"",cost:466.68,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786274928832 (786274928832)",status:"",link:"",cost:461.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC8_MeganCollins | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687197972\u0026h=AQILgvtbRC2V0gbsxZ5kkIKxGIE",cost:339.29,leads:3.0,cpl:113.1,threeplus:1.0,cpThreeplus:339.29,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.44,ctrLink:2.33,cpm:35.75,impressions:5417.0},
-{name:"Ad 786276482052 (786276482052)",status:"",link:"",cost:302.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC7_MiaThompson _ SV21_GmailWhiteARDisclaimer_1x1_FR",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913352133972\u0026h=AQIaPig2igY9gtOv1OeLn2hSsns",cost:279.34,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:279.34,sales:1.0,cpSale:279.34,ctrAll:4.52,ctrLink:1.35,cpm:9.83,impressions:69275.0},
-{name:"Ad 720591322247 (720591322247)",status:"",link:"",cost:191.18,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349977178 (763349977178)",status:"",link:"",cost:185.74,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763233245733 (763233245733)",status:"",link:"",cost:177.05,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC6_DavidKim | SV28_GmailDarkDisclaimer",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6924793046972\u0026h=AQKrxAuaDwJm6jsEwVYJzG9pKO0",cost:172.97,leads:2.0,cpl:86.49,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:2.93,ctrLink:3.15,cpm:31.68,impressions:5460.0},
-{name:"Ad 763262806543 (763262806543)",status:"",link:"",cost:167.58,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC5_MichelleKing | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687198772\u0026h=AQIDJ2Xp-0ubrVLgAlxSjkyzHuQ",cost:145.86,leads:1.0,cpl:145.86,threeplus:1.0,cpThreeplus:145.86,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:11.92,ctrLink:12.76,cpm:47.31,impressions:2147.0},
-{name:"SC7_MiaThompson | SV2_GmailDark | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6877687196572\u0026h=AQLf--CatGnmZmqUCjRY46nZH0U",cost:121.98,leads:3.0,cpl:40.66,threeplus:2.0,cpThreeplus:60.99,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.68,ctrLink:2.6,cpm:36.31,impressions:15832.0},
-{name:"SC5_MichelleKing _ SV8_GmailDarkAR_1x1_FR",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913358491972\u0026h=AQJHzvVm7x89P64vL4GrNSJnev0",cost:111.11,leads:1.0,cpl:111.11,threeplus:1.0,cpThreeplus:111.11,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.7,ctrLink:1.1,cpm:13.48,impressions:38207.0},
-{name:"Ad 786276480615 (786276480615)",status:"",link:"",cost:64.15,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC10_CEO1 _ SV22_RedditWhiteARDisclaimer_1x1_FR",status:"",link:"https://www.facebook.com/?feed_demo_ad=6913352544972\u0026h=AQJnI7u0_VMpIo3G6IhOWNK6M9U",cost:62.84,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.07,ctrLink:0.8,cpm:9.87,impressions:134921.0},
-{name:"Ad 763228004046 (763228004046)",status:"",link:"",cost:59.19,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Graphic 4 Static",status:"",link:"https://www.facebook.com/?feed_demo_ad=6845519216772\u0026h=AQIm3BpcyUz0tRZ7qtSob9z4mGA",cost:56.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.93,ctrLink:0.47,cpm:111.42,impressions:3216.0},
-{name:"CEO - Reddit 1 Static - White",status:"",link:"https://www.facebook.com/?feed_demo_ad=6845519210972\u0026h=AQLJVQWCA8gwvLALcgz73OKiXr8",cost:34.23,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.89,ctrLink:0.62,cpm:16.26,impressions:149971.0},
-{name:"SC6_DavidKim | SV28_GmailDarkDisclaimer | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6924793046972\u0026h=AQKrxAuaDwJm6jsEwVYJzG9pKO0",cost:25.39,leads:1.0,cpl:25.39,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.93,ctrLink:3.15,cpm:31.68,impressions:5460.0},
-{name:"CLIENT - Twitter 2 Static - White",status:"",link:"",cost:13.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.96,ctrLink:0.69,cpm:63.56,impressions:10305.0},
-{name:"Ad 776500575284 (776500575284)",status:"",link:"",cost:7.78,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 720510957289 (720510957289)",status:"",link:"",cost:0.69,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"CEO - Reddit 3 Static - Dark | Trucking",status:"",link:"https://www.facebook.com/?feed_demo_ad=6845519200172\u0026h=AQJDiIbJFJWrfLl5SOv65a00RgQ",cost:0.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.66,ctrLink:0.38,cpm:9.47,impressions:95430.0},
-{name:"CLIENT - Twitter 3 Static - White",status:"",link:"https://www.facebook.com/?feed_demo_ad=6845519202372\u0026h=AQLzwc3B-iq6xFvxuh0a5jnjA4w",cost:0.02,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:1.02,ctrLink:0.89,cpm:18.06,impressions:57871.0}
-],
-video:[
-{name:"Ali Video 5 - Mr Sanchez - Relaunch",status:"",link:"https://www.facebook.com/?feed_demo_ad=6892470711572\u0026h=AQKlT3Es-LkiAwNL8qt8zwTLvUk",cost:17601.22,leads:235.0,cpl:74.9,threeplus:1.0,cpThreeplus:17601.22,wanted:5.0,cpWanted:3520.24,sales:2.0,cpSale:8800.61,ctrAll:1.05,ctrLink:0.68,cpm:21.88,impressions:4027294.0},
-{name:"Ali Video 5 - Mr Sanchez",status:"",link:"https://www.facebook.com/?feed_demo_ad=6892470711572\u0026h=AQKlT3Es-LkiAwNL8qt8zwTLvUk",cost:17308.57,leads:270.0,cpl:64.11,threeplus:1.0,cpThreeplus:17308.57,wanted:9.0,cpWanted:1923.17,sales:8.0,cpSale:2163.57,ctrAll:1.05,ctrLink:0.68,cpm:21.88,impressions:4027294.0},
-{name:"Arabic Video 2",status:"",link:"https://www.facebook.com/?feed_demo_ad=6871213691372\u0026h=AQJAkMHPt0wZXocxyXkFRWdKXAM",cost:12925.79,leads:149.0,cpl:86.75,threeplus:44.0,cpThreeplus:293.77,wanted:20.0,cpWanted:646.29,sales:17.0,cpSale:760.34,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"VHK25_GotACheck | VB18_GotmeaCheck | VV17_AliDevonteCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916098488972\u0026h=AQI-4gYkix2RDFIhHYzueVzozdQ",cost:12367.66,leads:176.0,cpl:70.27,threeplus:77.0,cpThreeplus:160.62,wanted:13.0,cpWanted:951.36,sales:10.0,cpSale:1236.77,ctrAll:2.07,ctrLink:1.58,cpm:43.34,impressions:255204.0},
-{name:"VHK28_IDidEverything | VB20_NoDoubtAtAll | VV17_AliDevonteCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916097830972\u0026h=AQIjcgV3psrlkkOTsCko1MmIJB0",cost:5937.1,leads:81.0,cpl:73.3,threeplus:41.0,cpThreeplus:144.81,wanted:2.0,cpWanted:2968.55,sales:2.0,cpSale:2968.55,ctrAll:3.52,ctrLink:2.26,cpm:63.81,impressions:79627.0},
-{name:"VHK29_PickUpSettlement | VB21_SettlementCheck | VV17_AliDevonteCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916097514972\u0026h=AQIrklZxunfMQ7VIxvRPx_g7VA8",cost:5868.72,leads:110.0,cpl:53.35,threeplus:64.0,cpThreeplus:91.7,wanted:3.0,cpWanted:1956.24,sales:2.0,cpSale:2934.36,ctrAll:2.38,ctrLink:1.93,cpm:40.62,impressions:97048.0},
-{name:"Arabic Video 1v2 | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6890203255572\u0026h=AQI4L-Q9brlZzZIPeDsRddrEDeU",cost:5750.49,leads:56.0,cpl:102.69,threeplus:18.0,cpThreeplus:319.47,wanted:4.0,cpWanted:1437.62,sales:3.0,cpSale:1916.83,ctrAll:1.96,ctrLink:1.32,cpm:21.33,impressions:1175554.0},
-{name:"Farzy Collab - Story Body 1 - CID3KFSHLN",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=BIG+Check002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:4830.74,leads:69.0,cpl:70.01,threeplus:31.0,cpThreeplus:155.83,wanted:8.0,cpWanted:603.84,sales:2.0,cpSale:2415.37,ctrAll:3.05,ctrLink:2.71,cpm:24.75,impressions:96107.0},
-{name:"Farzy Collab - Story Lead 1 - CID38MIWQ0",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v1+Extra+Version001.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:4589.75,leads:41.0,cpl:111.95,threeplus:19.0,cpThreeplus:241.57,wanted:2.0,cpWanted:2294.88,sales:0.0,cpSale:null,ctrAll:1.75,ctrLink:1.56,cpm:24.28,impressions:81569.0},
-{name:"VHK31_HowCarLooksLike | VB23_BigCheck | VV18_AliFarzyCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916097234372\u0026h=AQLiUiI5NFytzIQZuhqTUu6bTDE",cost:4393.07,leads:62.0,cpl:70.86,threeplus:22.0,cpThreeplus:199.68,wanted:11.0,cpWanted:399.37,sales:7.0,cpSale:627.58,ctrAll:2.42,ctrLink:1.38,cpm:22.55,impressions:108255.0},
-{name:"Arabic Video 1v2",status:"",link:"https://www.facebook.com/?feed_demo_ad=6890203255572\u0026h=AQI4L-Q9brlZzZIPeDsRddrEDeU",cost:4366.65,leads:41.0,cpl:106.5,threeplus:6.0,cpThreeplus:727.77,wanted:5.0,cpWanted:873.33,sales:3.0,cpSale:1455.55,ctrAll:1.96,ctrLink:1.32,cpm:21.33,impressions:1175554.0},
-{name:"VHK35_WeHaveInsurance | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916095710772\u0026h=AQKSMxUjVO-7mM4P4-s57wAWYBY",cost:4108.56,leads:54.0,cpl:76.08,threeplus:28.0,cpThreeplus:146.73,wanted:4.0,cpWanted:1027.14,sales:4.0,cpSale:1027.14,ctrAll:22.95,ctrLink:25.57,cpm:53.57,impressions:40144.0},
-{name:"VHK34_WhySpendingMoney | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916096851172\u0026h=AQLeSddtbXv_faRBhesF6hM_XIc",cost:3983.55,leads:56.0,cpl:71.13,threeplus:27.0,cpThreeplus:147.54,wanted:2.0,cpWanted:1991.78,sales:2.0,cpSale:1991.78,ctrAll:5.11,ctrLink:4.4,cpm:27.72,impressions:92200.0},
-{name:"Truck Video - FB | Trucking",status:"",link:"https://www.facebook.com/?feed_demo_ad=6876899254372\u0026h=AQKWejvjWddQ5Qz0dndjxX8Mv5s",cost:3906.5,leads:65.0,cpl:60.1,threeplus:31.0,cpThreeplus:126.02,wanted:2.0,cpWanted:1953.25,sales:1.0,cpSale:3906.5,ctrAll:1.56,ctrLink:0.98,cpm:21.18,impressions:961538.0},
-{name:"Arabic Video 3 | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6890203255372\u0026h=AQIXimsoJt1dyo350IbX9_0UkYI",cost:3414.69,leads:27.0,cpl:126.47,threeplus:9.0,cpThreeplus:379.41,wanted:1.0,cpWanted:3414.69,sales:1.0,cpSale:3414.69,ctrAll:1.31,ctrLink:0.59,cpm:18.51,impressions:601824.0},
-{name:"VHK33_YouDontBuyLawyer | VB25_YupThatsMyDad | VV18_AliFarzyCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916096899572\u0026h=AQIqatzwYaW_gN5yErUJsSoUqqE",cost:2681.88,leads:55.0,cpl:48.76,threeplus:24.0,cpThreeplus:111.75,wanted:7.0,cpWanted:383.13,sales:7.0,cpSale:383.13,ctrAll:1.91,ctrLink:0.42,cpm:14.27,impressions:131189.0},
-{name:"VHK1_Testi_AllenEn | VB1_Testi_AllenEn | VV5_Testi_AllenSp",status:"",link:"https://www.facebook.com/?feed_demo_ad=6887187780772\u0026h=AQLp7k2OS5ndV1ENYtS1rIRsOa4",cost:2672.59,leads:6.0,cpl:445.43,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.08,ctrLink:2.9,cpm:43.46,impressions:49570.0},
-{name:"Farzy Collab - Story Lead 2 - CIDY1XVGL3",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v1002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:2556.35,leads:18.0,cpl:142.02,threeplus:10.0,cpThreeplus:255.63,wanted:10.0,cpWanted:255.63,sales:4.0,cpSale:639.09,ctrAll:3.78,ctrLink:3.69,cpm:42.08,impressions:29640.0},
-{name:"Testimonial | Nationwide",status:"",link:"https://www.facebook.com/?feed_demo_ad=6892769206972\u0026h=AQIMWIPuVG3k8M_pU5fTrtLyENU",cost:2054.99,leads:37.0,cpl:55.54,threeplus:24.0,cpThreeplus:85.62,wanted:3.0,cpWanted:685.0,sales:2.0,cpSale:1027.49,ctrAll:2.52,ctrLink:1.98,cpm:84.08,impressions:525981.0},
-{name:"VHK21_ArabicPodcastAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6915915548172\u0026h=AQJTSHohDzi4cSVJcgx2OFg_p6c",cost:1805.73,leads:9.0,cpl:200.64,threeplus:4.0,cpThreeplus:451.43,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:6.91,ctrLink:3.39,cpm:17.6,impressions:87093.0},
-{name:"Farzy Collab - Story Lead 3 - CID5YVR7PI",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=YUP+that%27s+my+dad+v2002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:1655.65,leads:10.0,cpl:165.56,threeplus:6.0,cpThreeplus:275.94,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:18.36,ctrLink:20.26,cpm:81.11,impressions:10081.0},
-{name:"VHK30_Awww | VB22_WhyDoNeedCrutches | VV17_AliDevonteCollab",status:"Winner",link:"https://www.facebook.com/?feed_demo_ad=6916097361372\u0026h=AQLQYbxvSJzx6-H8JRTMBpIuox4",cost:1637.18,leads:12.0,cpl:136.43,threeplus:6.0,cpThreeplus:272.86,wanted:3.0,cpWanted:545.73,sales:2.0,cpSale:818.59,ctrAll:25.13,ctrLink:28.69,cpm:52.53,impressions:19060.0},
-{name:"VHK24_PickUpCheck | VB17_BabyMamaCheck | VV17_AliDevonteCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916098814372\u0026h=AQLUQWyQxE1Uj-TESj0HnpHhfKc",cost:1633.06,leads:24.0,cpl:68.04,threeplus:12.0,cpThreeplus:136.09,wanted:2.0,cpWanted:816.53,sales:2.0,cpSale:816.53,ctrAll:25.91,ctrLink:28.0,cpm:66.58,impressions:12566.0},
-{name:"Arabic Video 3",status:"",link:"https://www.facebook.com/?feed_demo_ad=6890203255372\u0026h=AQIXimsoJt1dyo350IbX9_0UkYI",cost:1491.15,leads:12.0,cpl:124.26,threeplus:1.0,cpThreeplus:1491.15,wanted:2.0,cpWanted:745.58,sales:2.0,cpSale:745.58,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Arabic Video 4 | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6890203255772\u0026h=AQKwzWMAxB3zzvuCRLVcbQfHAv4",cost:1445.74,leads:9.0,cpl:160.64,threeplus:5.0,cpThreeplus:289.15,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.77,ctrLink:1.68,cpm:18.4,impressions:263062.0},
-{name:"VHK32_BetterPayforThis | VB24_JustGotRear | VV18_AliFarzyCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916096994972\u0026h=AQJrsfrvwley2HUdfaB_5HP99Ys",cost:1438.39,leads:15.0,cpl:95.89,threeplus:9.0,cpThreeplus:159.82,wanted:1.0,cpWanted:1438.39,sales:0.0,cpSale:null,ctrAll:8.38,ctrLink:8.81,cpm:44.16,impressions:21765.0},
-{name:"VHK20_YoucanSwitchLawyerAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6915915232972\u0026h=AQI3hXXftxQoQssoeZdh6Yh1Jq0",cost:1260.37,leads:4.0,cpl:315.09,threeplus:3.0,cpThreeplus:420.12,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.79,ctrLink:3.48,cpm:20.03,impressions:55393.0},
-{name:"Arabic Video 1v1",status:"",link:"https://www.facebook.com/?feed_demo_ad=6876902318172\u0026h=AQIybFZ6HneO8HVtMpM8KIEFJ44",cost:1175.33,leads:15.0,cpl:78.36,threeplus:3.0,cpThreeplus:391.78,wanted:1.0,cpWanted:1175.33,sales:null,cpSale:null,ctrAll:1.97,ctrLink:1.12,cpm:20.36,impressions:885523.0},
-{name:"Arabic Video 1v1 | Approved States",status:"",link:"https://www.facebook.com/?feed_demo_ad=6876902318172\u0026h=AQIybFZ6HneO8HVtMpM8KIEFJ44",cost:1139.35,leads:14.0,cpl:81.38,threeplus:7.0,cpThreeplus:162.76,wanted:1.0,cpWanted:1139.35,sales:1.0,cpSale:1139.35,ctrAll:1.97,ctrLink:1.12,cpm:20.36,impressions:885523.0},
-{name:"VHK22_BabaJustGotAccidentAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6915916464772\u0026h=AQJvHt6qCwpf52pSJDBpYsR9Ck4",cost:983.4,leads:0.0,cpl:null,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:5.75,ctrLink:3.88,cpm:18.19,impressions:51276.0},
-{name:"VHK27_CommercialPolicy | VB19_LoveoftheGame | VV17_AliDevonteCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916098028172\u0026h=AQIRwc2QGq2tYPNusj8MpY0qgZY",cost:722.69,leads:12.0,cpl:60.22,threeplus:6.0,cpThreeplus:120.45,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:22.2,ctrLink:24.85,cpm:69.35,impressions:5891.0},
-{name:"Arabic Video 4",status:"",link:"https://www.facebook.com/?feed_demo_ad=6871213690972\u0026h=AQKbV_aVLL5d8jdq4qvn5NekrZc",cost:679.61,leads:2.0,cpl:339.81,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"AliFaroukieAR - Story Body - CIDNDF8G34",status:"",link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+1+-+Arabic+captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:584.9,leads:13.0,cpl:44.99,threeplus:10.0,cpThreeplus:58.49,wanted:1.0,cpWanted:584.9,sales:1.0,cpSale:584.9,ctrAll:2.52,ctrLink:1.16,cpm:16.96,impressions:34961.0},
-{name:"Truck Video - IG | Trucking",status:"",link:"",cost:381.33,leads:2.0,cpl:190.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.58,ctrLink:0.34,cpm:32.2,impressions:8483.0},
-{name:"Farzy Collab - Story Body - CID9WJBX93",status:"Testing",link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=just+got+rear+ended+002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:374.07,leads:2.0,cpl:187.03,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:4.6,ctrLink:4.73,cpm:47.51,impressions:3894.0},
-{name:"Ali Video English 50 Million (Long)",status:"",link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_eMH0",cost:294.67,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:0.66,ctrLink:0.5,cpm:21.67,impressions:86030.0},
-{name:"VHK19_BabaJustGotAccident | VB14_CEOBody | VV15_AliFaroukie",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6915914314172\u0026h=AQJs9Q--cV9kTJv06930duwIzCY",cost:248.13,leads:0.0,cpl:null,threeplus:0.0,cpThreeplus:null,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:3.49,ctrLink:2.1,cpm:27.91,impressions:8814.0},
-{name:"VHK23_YouSayWhat | VB16_InsuranceScam | VV17_AliDevonteCollab",status:"Testing",link:"https://www.facebook.com/?feed_demo_ad=6916099074572\u0026h=AQLW-5R8JbRA2FS3wKM2xAHP5zI",cost:220.5,leads:1.0,cpl:220.5,threeplus:1.0,cpThreeplus:220.5,wanted:0.0,cpWanted:null,sales:0.0,cpSale:null,ctrAll:1.9,ctrLink:1.56,cpm:52.7,impressions:4097.0},
-{name:"AliFaroukieAR - Story Body - CIDIZT0WCF",status:"",link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+3+-+Arabic+Captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:202.45,leads:6.0,cpl:33.74,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:2.07,ctrLink:0.89,cpm:16.9,impressions:12105.0},
-{name:"Arabic Video 1v1 | Ohio",status:"",link:"https://www.facebook.com/?feed_demo_ad=6875880074772\u0026h=AQIPcJXWx8M6hsY0GcTx19Arg28",cost:167.56,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:3.22,ctrLink:2.45,cpm:13.09,impressions:84353.0},
-{name:"Arabic Video 4 | Ohio",status:"",link:"https://www.facebook.com/?feed_demo_ad=6875880074572\u0026h=AQKOas_8Sa7AmEZFNYyMRiM96Cw",cost:144.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:6.47,ctrLink:2.61,cpm:13.18,impressions:88298.0}
-],
-staticConcepts:[
-{name:"MiaThompson",variations:8,link:"https://www.facebook.com/?feed_demo_ad=6877687199172\u0026h=AQJI01dGcpU5EzEdFfACndLaHnA",cost:60747.17,leads:750.0,cpl:81.0,threeplus:372.0,cpThreeplus:163.3,wanted:23.0,cpWanted:2641.18,sales:17.0,cpSale:3573.36,ctrAll:null,ctrLink:null,cpm:40.3,impressions:1507262.0},
-{name:"MeganCollins",variations:8,link:"https://www.facebook.com/?feed_demo_ad=6877687197572\u0026h=AQIItbbJTCVq2UtkuMLF20nddvY",cost:47924.49,leads:609.0,cpl:78.69,threeplus:261.0,cpThreeplus:183.62,wanted:25.0,cpWanted:1916.98,sales:20.0,cpSale:2396.22,ctrAll:null,ctrLink:null,cpm:22.76,impressions:2105627.0},
-{name:"AnthonyReed",variations:5,link:"https://www.facebook.com/?feed_demo_ad=6877687198572\u0026h=AQJ6DY9K1iS4mhnIaORa6vTunvs",cost:42564.1,leads:479.0,cpl:88.86,threeplus:193.0,cpThreeplus:220.54,wanted:5.0,cpWanted:8512.82,sales:5.0,cpSale:8512.82,ctrAll:null,ctrLink:null,cpm:31.36,impressions:1357469.0},
-{name:"MarkJensen",variations:5,link:"https://www.facebook.com/?feed_demo_ad=6877686567772\u0026h=AQJnwAVXZMKCP8gagTT2TuV-PeM",cost:33401.9,leads:404.0,cpl:82.68,threeplus:209.0,cpThreeplus:159.82,wanted:8.0,cpWanted:4175.24,sales:6.0,cpSale:5566.98,ctrAll:null,ctrLink:null,cpm:33.0,impressions:1012265.0},
-{name:"CEO1",variations:6,link:"",cost:25410.74,leads:251.0,cpl:101.24,threeplus:141.0,cpThreeplus:180.22,wanted:24.0,cpWanted:1058.78,sales:14.0,cpSale:1815.05,ctrAll:null,ctrLink:null,cpm:29.48,impressions:861902.0},
-{name:"Truck Ad 2 1x1 - Disclaimer updated",variations:1,link:"",cost:18707.75,leads:231.0,cpl:80.99,threeplus:135.0,cpThreeplus:138.58,wanted:15.0,cpWanted:1247.18,sales:9.0,cpSale:2078.64,ctrAll:null,ctrLink:null,cpm:33.51,impressions:558307.0},
-{name:"CEO - Reddit 2 Static - White",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6876900766172\u0026h=AQL0MyWMBBH5HnJu1h9bOOHvL9A",cost:18252.49,leads:205.0,cpl:89.04,threeplus:105.0,cpThreeplus:173.83,wanted:7.0,cpWanted:2607.5,sales:6.0,cpSale:3042.08,ctrAll:null,ctrLink:null,cpm:43.37,impressions:420868.0},
-{name:"MichelleKing",variations:7,link:"https://www.facebook.com/?feed_demo_ad=6877687199572\u0026h=AQKyEwu4roKJy5BbFRdBX9lflEE",cost:16264.89,leads:157.0,cpl:103.6,threeplus:51.0,cpThreeplus:318.92,wanted:6.0,cpWanted:2710.82,sales:5.0,cpSale:3252.98,ctrAll:null,ctrLink:null,cpm:20.16,impressions:806706.0},
-{name:"CEO2",variations:2,link:"",cost:15028.9,leads:205.0,cpl:73.31,threeplus:77.0,cpThreeplus:195.18,wanted:6.0,cpWanted:2504.82,sales:6.0,cpSale:2504.82,ctrAll:null,ctrLink:null,cpm:37.09,impressions:405229.0},
-{name:"DavidKim",variations:5,link:"",cost:15014.07,leads:159.0,cpl:94.43,threeplus:61.0,cpThreeplus:246.13,wanted:7.0,cpWanted:2144.87,sales:5.0,cpSale:3002.81,ctrAll:null,ctrLink:null,cpm:26.95,impressions:557035.0},
-{name:"Ad 763349980778 (763349980778)",variations:1,link:"",cost:8813.66,leads:1.0,cpl:8813.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349991290 (763349991290)",variations:1,link:"",cost:8549.45,leads:4.0,cpl:2137.36,threeplus:1.0,cpThreeplus:8549.45,wanted:null,cpWanted:null,sales:1.0,cpSale:8549.45,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"MarcusSmith",variations:5,link:"https://www.facebook.com/?feed_demo_ad=6877687197172\u0026h=AQJoaOkVB_5X2SHifoC-ZW7FQlo",cost:6603.48,leads:61.0,cpl:108.25,threeplus:42.0,cpThreeplus:157.23,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:7.96,impressions:829919.0},
-{name:"Ad 776690530313 (776690530313)",variations:1,link:"",cost:4738.12,leads:1.0,cpl:4738.12,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"AllenMrLopezNoDate",variations:1,link:"https://drive.google.com/open?id=12VHhfGcxTqHewHyg-_P02Y3u_XkqnUlF\u0026usp=drive_copy",cost:4356.09,leads:33.0,cpl:132.0,threeplus:29.0,cpThreeplus:150.21,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:93.46,impressions:46607.0},
-{name:"Ad 739131468223 (739131468223)",variations:1,link:"",cost:4010.44,leads:2.0,cpl:2005.22,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:4010.44,sales:1.0,cpSale:4010.44,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763227997896 (763227997896)",variations:1,link:"",cost:3855.13,leads:3.0,cpl:1285.04,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776641992223 (776641992223)",variations:1,link:"",cost:3825.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776500554929 (776500554929)",variations:1,link:"",cost:3219.12,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786311202238 (786311202238)",variations:1,link:"",cost:2722.09,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"LiamAnderson",variations:1,link:"https://drive.google.com/open?id=1kcag_RxuKCt7cfQReeswR4cHEtElspiC\u0026usp=drive_copy",cost:2475.85,leads:25.0,cpl:99.03,threeplus:13.0,cpThreeplus:190.45,wanted:1.0,cpWanted:2475.85,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:103.72,impressions:23870.0},
-{name:"Allen Check Static",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6892769207372\u0026h=AQLVhXReRA8KiyGCZnz-Lvpy7Bw",cost:2422.7,leads:28.0,cpl:86.52,threeplus:15.0,cpThreeplus:161.51,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:8.07,impressions:300154.0},
-{name:"RachelTorres",variations:2,link:"https://drive.google.com/file/d/1CBxAN39loCxGgxCabRamtVzErpJmSljT/view?usp=drive_link",cost:2204.14,leads:14.0,cpl:157.44,threeplus:7.0,cpThreeplus:314.88,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:43.3,impressions:50901.0},
-{name:"CLIENT - Twitter 6 Static - Dark",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6892769207772\u0026h=AQKbdQGynv9SdN19SwBzuxbMnDg",cost:1944.8,leads:11.0,cpl:176.8,threeplus:5.0,cpThreeplus:388.96,wanted:2.0,cpWanted:972.4,sales:1.0,cpSale:1944.8,ctrAll:null,ctrLink:null,cpm:26.13,impressions:74429.0},
-{name:"AnthonyReed _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913355787372\u0026h=AQLuRYF0-_22i1asoO3m8BWN2uQ",cost:1618.35,leads:22.0,cpl:73.56,threeplus:10.0,cpThreeplus:161.83,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:9.24,impressions:175072.0},
-{name:"Ad 776500560959 (776500560959)",variations:1,link:"",cost:1570.57,leads:4.0,cpl:392.64,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"CEO",variations:2,link:"",cost:1564.36,leads:13.0,cpl:120.34,threeplus:6.0,cpThreeplus:260.73,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:10.43,impressions:149972.0},
-{name:"MichelleKing _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913351353572\u0026h=AQL-S7rleTN6SFan2MAFgQAa2t0",cost:1388.95,leads:16.0,cpl:86.81,threeplus:10.0,cpThreeplus:138.89,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:39.41,impressions:35242.0},
-{name:"AllenMrLopez",variations:1,link:"https://drive.google.com/open?id=1oS3TtEkDY2rrzez6mRubl-bg967mvW_V\u0026usp=drive_copy",cost:1097.0,leads:4.0,cpl:274.25,threeplus:4.0,cpThreeplus:274.25,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:62.62,impressions:17517.0},
-{name:"Ad 763263279757 (763263279757)",variations:1,link:"",cost:1030.92,leads:1.0,cpl:1030.92,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:1030.92,sales:1.0,cpSale:1030.92,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"MeganCollins _ SV19_GmailWhiteDisclaimer_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913351012372\u0026h=AQKBIjnoOf4f1pVqXPnu161U538",cost:1027.09,leads:11.0,cpl:93.37,threeplus:9.0,cpThreeplus:114.12,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:245.01,impressions:4192.0},
-{name:"Ad 786276479460 (786276479460)",variations:1,link:"",cost:901.3,leads:1.0,cpl:901.3,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786276514056 (786276514056)",variations:1,link:"",cost:889.07,leads:2.0,cpl:444.54,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786311993941 (786311993941)",variations:1,link:"",cost:750.81,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776369478153 (776369478153)",variations:1,link:"",cost:730.31,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349982122 (763349982122)",variations:1,link:"",cost:537.23,leads:4.0,cpl:134.31,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349945672 (763349945672)",variations:1,link:"",cost:482.04,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763228003890 (763228003890)",variations:1,link:"",cost:481.87,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 776500561082 (776500561082)",variations:1,link:"",cost:467.26,leads:3.0,cpl:155.75,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 795119468618 (795119468618)",variations:1,link:"",cost:466.68,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786274928832 (786274928832)",variations:1,link:"",cost:461.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 786276482052 (786276482052)",variations:1,link:"",cost:302.0,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC7_MiaThompson _ SV21_GmailWhiteARDisclaimer_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913352133972\u0026h=AQIaPig2igY9gtOv1OeLn2hSsns",cost:279.34,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:1.0,cpWanted:279.34,sales:1.0,cpSale:279.34,ctrAll:null,ctrLink:null,cpm:4.03,impressions:69275.0},
-{name:"Ad 720591322247 (720591322247)",variations:1,link:"",cost:191.18,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763349977178 (763349977178)",variations:1,link:"",cost:185.74,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763233245733 (763233245733)",variations:1,link:"",cost:177.05,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 763262806543 (763262806543)",variations:1,link:"",cost:167.58,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC5_MichelleKing _ SV8_GmailDarkAR_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913358491972\u0026h=AQJHzvVm7x89P64vL4GrNSJnev0",cost:111.11,leads:1.0,cpl:111.11,threeplus:1.0,cpThreeplus:111.11,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:2.91,impressions:38207.0},
-{name:"Ad 786276480615 (786276480615)",variations:1,link:"",cost:64.15,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"SC10_CEO1 _ SV22_RedditWhiteARDisclaimer_1x1_FR",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6913352544972\u0026h=AQJnI7u0_VMpIo3G6IhOWNK6M9U",cost:62.84,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.47,impressions:134921.0},
-{name:"Ad 763228004046 (763228004046)",variations:1,link:"",cost:59.19,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Graphic 4 Static",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6845519216772\u0026h=AQIm3BpcyUz0tRZ7qtSob9z4mGA",cost:56.54,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:17.58,impressions:3216.0},
-{name:"CLIENT",variations:2,link:"",cost:13.56,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.2,impressions:68176.0},
-{name:"Ad 776500575284 (776500575284)",variations:1,link:"",cost:7.78,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Ad 720510957289 (720510957289)",variations:1,link:"",cost:0.69,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"CEO - Reddit 3 Static - Dark",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6845519200172\u0026h=AQJDiIbJFJWrfLl5SOv65a00RgQ",cost:0.25,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:0.0,impressions:95430.0}
-],
-videoConcepts:[
-{name:"Ali Video 5",variations:2,link:"https://www.facebook.com/?feed_demo_ad=6892470711572\u0026h=AQKlT3Es-LkiAwNL8qt8zwTLvUk",cost:34909.79,leads:505.0,cpl:69.13,threeplus:2.0,cpThreeplus:17454.9,wanted:14.0,cpWanted:2493.56,sales:10.0,cpSale:3490.98,ctrAll:null,ctrLink:null,cpm:4.33,impressions:8054588.0},
-{name:"AliDevonteCollab",variations:7,link:"https://www.facebook.com/?feed_demo_ad=6916098488972\u0026h=AQI-4gYkix2RDFIhHYzueVzozdQ",cost:28386.91,leads:416.0,cpl:68.24,threeplus:207.0,cpThreeplus:137.13,wanted:23.0,cpWanted:1234.21,sales:18.0,cpSale:1577.05,ctrAll:null,ctrLink:null,cpm:59.95,impressions:473493.0},
-{name:"AliFarzyCollab",variations:5,link:"https://www.facebook.com/?feed_demo_ad=6916096851172\u0026h=AQLeSddtbXv_faRBhesF6hM_XIc",cost:16605.45,leads:242.0,cpl:68.62,threeplus:110.0,cpThreeplus:150.96,wanted:25.0,cpWanted:664.22,sales:20.0,cpSale:830.27,ctrAll:null,ctrLink:null,cpm:42.19,impressions:393553.0},
-{name:"Farzy Collab",variations:5,link:"https://www.dropbox.com/scl/fo/tuj5m3e6iruk0pjb3poda/ADcq_0btsJFcEnvE8VZO1Y8?dl=0\u0026e=2\u0026preview=BIG+Check002.mp4\u0026rlkey=e7cs5cb55zt0o6js56lcwhu5r\u0026st=b1x1q69t",cost:14006.56,leads:140.0,cpl:100.05,threeplus:66.0,cpThreeplus:212.22,wanted:20.0,cpWanted:700.33,sales:6.0,cpSale:2334.43,ctrAll:null,ctrLink:null,cpm:63.29,impressions:221291.0},
-{name:"Arabic Video 2",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6871213691372\u0026h=AQJAkMHPt0wZXocxyXkFRWdKXAM",cost:12925.79,leads:149.0,cpl:86.75,threeplus:44.0,cpThreeplus:293.77,wanted:20.0,cpWanted:646.29,sales:17.0,cpSale:760.34,ctrAll:null,ctrLink:null,cpm:null,impressions:null},
-{name:"Arabic Video 1v2",variations:2,link:"https://www.facebook.com/?feed_demo_ad=6890203255572\u0026h=AQI4L-Q9brlZzZIPeDsRddrEDeU",cost:10117.14,leads:97.0,cpl:104.3,threeplus:24.0,cpThreeplus:421.55,wanted:9.0,cpWanted:1124.13,sales:6.0,cpSale:1686.19,ctrAll:null,ctrLink:null,cpm:4.3,impressions:2351108.0},
-{name:"Arabic Video 3",variations:2,link:"https://www.facebook.com/?feed_demo_ad=6890203255372\u0026h=AQIXimsoJt1dyo350IbX9_0UkYI",cost:4905.84,leads:39.0,cpl:125.79,threeplus:10.0,cpThreeplus:490.58,wanted:3.0,cpWanted:1635.28,sales:3.0,cpSale:1635.28,ctrAll:null,ctrLink:null,cpm:8.15,impressions:601824.0},
-{name:"AliFaroukieAR",variations:5,link:"https://www.dropbox.com/scl/fo/1j5gj9tzqz7x420dxhydu/APyNpuzNcfAoAaQhpmcMuZU?dl=0\u0026e=1\u0026preview=Arabic+Ad+1+-+Arabic+captions.mp4\u0026rlkey=qd2w2nchhyxp7a3ohgmun73lu\u0026st=5l7oj5by",cost:4836.85,leads:32.0,cpl:151.15,threeplus:17.0,cpThreeplus:284.52,wanted:1.0,cpWanted:4836.85,sales:1.0,cpSale:4836.85,ctrAll:null,ctrLink:null,cpm:20.08,impressions:240828.0},
-{name:"Truck Video - FB",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6876899254372\u0026h=AQKWejvjWddQ5Qz0dndjxX8Mv5s",cost:3906.5,leads:65.0,cpl:60.1,threeplus:31.0,cpThreeplus:126.02,wanted:2.0,cpWanted:1953.25,sales:1.0,cpSale:3906.5,ctrAll:null,ctrLink:null,cpm:4.06,impressions:961538.0},
-{name:"Testi_AllenSp",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6887187780772\u0026h=AQLp7k2OS5ndV1ENYtS1rIRsOa4",cost:2672.59,leads:6.0,cpl:445.43,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:53.92,impressions:49570.0},
-{name:"Arabic Video 1v1",variations:3,link:"https://www.facebook.com/?feed_demo_ad=6876902318172\u0026h=AQIybFZ6HneO8HVtMpM8KIEFJ44",cost:2482.24,leads:29.0,cpl:85.59,threeplus:10.0,cpThreeplus:248.22,wanted:2.0,cpWanted:1241.12,sales:1.0,cpSale:2482.24,ctrAll:null,ctrLink:null,cpm:1.34,impressions:1855399.0},
-{name:"Arabic Video 4",variations:3,link:"https://www.facebook.com/?feed_demo_ad=6871213690972\u0026h=AQKbV_aVLL5d8jdq4qvn5NekrZc",cost:2270.16,leads:11.0,cpl:206.38,threeplus:5.0,cpThreeplus:454.03,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:6.46,impressions:351360.0},
-{name:"Testimonial",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6892769206972\u0026h=AQIMWIPuVG3k8M_pU5fTrtLyENU",cost:2054.99,leads:37.0,cpl:55.54,threeplus:24.0,cpThreeplus:85.62,wanted:3.0,cpWanted:685.0,sales:2.0,cpSale:1027.49,ctrAll:null,ctrLink:null,cpm:3.91,impressions:525981.0},
-{name:"Truck Video - IG",variations:1,link:"",cost:381.33,leads:2.0,cpl:190.66,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:44.95,impressions:8483.0},
-{name:"Ali Video English 50 Million (Long)",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_eMH0",cost:294.67,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:3.43,impressions:86030.0},
-{name:"AliFaroukie",variations:1,link:"https://www.facebook.com/?feed_demo_ad=6915915548172\u0026h=AQJTSHohDzi4cSVJcgx2OFg_p6c",cost:248.13,leads:null,cpl:null,threeplus:null,cpThreeplus:null,wanted:null,cpWanted:null,sales:null,cpSale:null,ctrAll:null,ctrLink:null,cpm:28.15,impressions:8814.0}
-]
+statics:[{name:"SC2_MarkJensen | SV2_GmailDark",cost:3149.9900000000002,leads:39.0,cpl:80.77,threePlus:20.0,cpThreePlus:157.5,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:6.05,ctrLink:6.43,cpm:33.04,impressions:95353.0,link:"https://drive.google.com/file/d/1bStbvUtpuHOLTw9-RKQfFPKA2tIWkpoc/view?usp=drive_link"},
+{name:"SC2_MarkJensen | SV3_GmailWhite",cost:21704.56,leads:244.0,cpl:88.95,threePlus:116.0,cpThreePlus:187.11,wanted:7.0,cpWanted:3100.65,sales:5.0,cps:4340.91,ctrAll:2.69,ctrLink:2.46,cpm:50.47,impressions:430068.0,link:"https://drive.google.com/file/d/1ZdyZV7p-yvUz8V37eLcUHNOpYBGFOkqC/view?usp=drive_link"},
+{name:"SC3_MarcusSmith | SV2_GmailDark",cost:2128.21,leads:18.0,cpl:118.23,threePlus:12.0,cpThreePlus:177.35,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.9,ctrLink:2.83,cpm:37.98,impressions:56035.0,link:"https://drive.google.com/file/d/10dSkzILcFYvaRb8R3G9N-G2ph8JC8Gse/view?usp=drive_link"},
+{name:"SC4_RachelTorres | SV2_GmailDark",cost:1280.42,leads:10.0,cpl:128.04,threePlus:7.0,cpThreePlus:182.92,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.64,ctrLink:1.47,cpm:43.73,impressions:29282.0,link:"https://drive.google.com/file/d/1CBxAN39loCxGgxCabRamtVzErpJmSljT/view?usp=drive_link"},
+{name:"SC4_RachelTorres | SV3_GmailWhite",cost:923.72,leads:4.0,cpl:230.93,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.03,ctrLink:1.89,cpm:42.73,impressions:21619.0,link:"https://drive.google.com/file/d/1AHktXpkGXZHcGjFXzn-2jK5SWPl3iWRU/view?usp=drive_link"},
+{name:"SC5_MichelleKing | SV2_GmailDark",cost:2135.7200000000003,leads:17.0,cpl:125.63,threePlus:7.0,cpThreePlus:305.1,wanted:2.0,cpWanted:1067.86,sales:2.0,cps:1067.86,ctrAll:2.65,ctrLink:2.5,cpm:39.06,impressions:54679.0,link:"https://drive.google.com/file/d/1xnm6BehQ9XO45-ox65CwfnPazquUj-vT/view?usp=drive_link"},
+{name:"SC5_MichelleKing | SV3_GmailWhite",cost:11153.45,leads:111.0,cpl:100.48,threePlus:38.0,cpThreePlus:293.51,wanted:3.0,cpWanted:3717.82,sales:3.0,cps:3717.82,ctrAll:1.99,ctrLink:1.78,cpm:36.87,impressions:302489.0,link:"https://drive.google.com/file/d/1-v05xEFaEn83PaDgy7aQrnuOccW1JeQL/view?usp=drive_link"},
+{name:"SC6_DavidKim | SV2_GmailDark",cost:9211.15,leads:91.0,cpl:101.22,threePlus:35.0,cpThreePlus:263.18,wanted:4.0,cpWanted:2302.79,sales:2.0,cps:4605.57,ctrAll:2.78,ctrLink:2.47,cpm:41.41,impressions:222413.0,link:"https://drive.google.com/file/d/1YMNoty1nac7Bj1_Nozc4Sr9Ij9s0xE5c/view?usp=drive_link"},
+{name:"SC6_DavidKim | SV3_GmailWhite",cost:4557.18,leads:55.0,cpl:82.86,threePlus:19.0,cpThreePlus:239.85,wanted:3.0,cpWanted:1519.06,sales:3.0,cps:1519.06,ctrAll:1.51,ctrLink:1.18,cpm:44.99,impressions:101289.0,link:"https://drive.google.com/file/d/15Ldo7sCoKQaUhU_VSva1F55q6YBvs_Ec/view?usp=drive_link"},
+{name:"SC7_MiaThompson | SV2_GmailDark",cost:574.86,leads:4.0,cpl:143.72,threePlus:2.0,cpThreePlus:287.43,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.68,ctrLink:2.6,cpm:36.31,impressions:15832.0,link:"https://drive.google.com/file/d/1ZOVCHC-ljJr560PIpQ2tUVGLJgpDGJv1/view?usp=drive_link"},
+{name:"SC7_MiaThompson | SV3_GmailWhite",cost:28177.230000000003,leads:331.0,cpl:85.13,threePlus:148.0,cpThreePlus:190.39,wanted:8.0,cpWanted:3522.15,sales:6.0,cps:4696.21,ctrAll:3.89,ctrLink:3.98,cpm:31.92,impressions:882677.0,link:"https://drive.google.com/file/d/1rml2Tdkn7IMtgv3tx9zccwDj3rT9V8ur/view?usp=drive_link"},
+{name:"SC8_MeganCollins | SV2_GmailDark",cost:517.9,leads:4.0,cpl:129.47,threePlus:1.0,cpThreePlus:517.9,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:4.98,ctrLink:5.19,cpm:33.96,impressions:15250.0,link:"https://drive.google.com/file/d/1j_LYsL5jCMxiKtH_YW3C0tseJuYMjoWP/view?usp=drive_link"},
+{name:"SC8_MeganCollins | SV3_GmailWhite",cost:16402.649999999998,leads:187.0,cpl:87.71,threePlus:85.0,cpThreePlus:192.97,wanted:11.0,cpWanted:1491.15,sales:10.0,cps:1640.26,ctrAll:2.3,ctrLink:1.8,cpm:33.34,impressions:492007.0,link:"https://drive.google.com/file/d/19JR5a_9f5XRO8XHmcjasstSo94PUhqQg/view?usp=drive_link"},
+{name:"SC9_AnthonyReed | SV2_GmailDark",cost:29439.6,leads:311.0,cpl:94.66,threePlus:110.0,cpThreePlus:267.63,wanted:3.0,cpWanted:9813.2,sales:3.0,cps:9813.2,ctrAll:5.17,ctrLink:5.26,cpm:52.07,impressions:565337.0,link:"https://drive.google.com/file/d/1lSf_YwPUiRAmGTn7pAjBvHOluSKnu7rs/view?usp=drive_link"},
+{name:"SC9_AnthonyReed | SV3_GmailWhite",cost:6133.97,leads:75.0,cpl:81.79,threePlus:37.0,cpThreePlus:165.78,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:5.83,ctrLink:6.13,cpm:36.85,impressions:166449.0,link:"https://drive.google.com/file/d/1nnbx3fn0-GN5rsCvVrZXEB9haNVpWF8R/view?usp=drive_link"},
+{name:"SC5_MichelleKing | SV4_GmailWhiteAR",cost:631.26,leads:5.0,cpl:126.25,threePlus:2.0,cpThreePlus:315.63,wanted:1.0,cpWanted:631.26,sales:0.0,cps:null,ctrAll:3.32,ctrLink:0.92,cpm:10.49,impressions:60163.0,link:"https://www.facebook.com/?feed_demo_ad=6896254262572\u0026h=AQIz9KNnoJn9a4OtBx83N921Q3k"},
+{name:"SC8_MeganCollins | SV4_GmailWhiteAR",cost:2377.27,leads:25.0,cpl:95.09,threePlus:7.0,cpThreePlus:339.61,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:5.67,ctrLink:0.93,cpm:10.84,impressions:219406.0,link:"https://www.facebook.com/?feed_demo_ad=6896441419572\u0026h=AQJM78wO4-6Mxg0vqye89oHqwng"},
+{name:"SC7_MiaThompson | SV4_GmailWhiteAR",cost:1617.56,leads:2.0,cpl:808.78,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:4.75,ctrLink:0.75,cpm:10.8,impressions:149805.0,link:"https://www.facebook.com/?feed_demo_ad=6896440025372\u0026h=AQKA_gPXCwZTbgtiyB8_ayxH-Vg"},
+{name:"SC10_CEO1 | SV6_RedditWhiteAR",cost:1373.08,leads:12.0,cpl:114.42,threePlus:1.0,cpThreePlus:1373.08,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:3.5,ctrLink:0.8,cpm:8.9,impressions:154241.0,link:"https://www.facebook.com/?feed_demo_ad=6896443100172\u0026h=AQKipWsf6dWE-JXHWumUQWTlncI"},
+{name:"SC10_CEO1 | SV7_RedditWhiteES",cost:1412.92,leads:4.0,cpl:353.23,threePlus:1.0,cpThreePlus:1412.92,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.61,ctrLink:0.79,cpm:7.8,impressions:181047.0,link:"https://www.facebook.com/?feed_demo_ad=6896443613572\u0026h=AQJGb2X9rYqoAgJDb84gUg-EhUg"},
+{name:"SC5_MichelleKing | SV8_GmailDarkAR",cost:631.68,leads:1.0,cpl:631.68,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.49,ctrLink:0.59,cpm:10.23,impressions:61733.0,link:"https://www.facebook.com/?feed_demo_ad=6896439570972\u0026h=AQJ0JHztdnJYsrbDQ87ZQJZCcAE"},
+{name:"SC8_MeganCollins | SV8_GmailDarkAR",cost:1231.01,leads:15.0,cpl:82.07,threePlus:2.0,cpThreePlus:615.5,wanted:1.0,cpWanted:1231.01,sales:1.0,cps:1231.01,ctrAll:5.28,ctrLink:1.09,cpm:14.52,impressions:84780.0,link:"https://www.facebook.com/?feed_demo_ad=6896441934372\u0026h=AQJ4vrQckHJSOEKyD6h89xAMqtE"},
+{name:"SC7_MiaThompson | SV8_GmailDarkAR",cost:899.36,leads:1.0,cpl:899.36,threePlus:1.0,cpThreePlus:899.36,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:3.38,ctrLink:0.83,cpm:11.47,impressions:78395.0,link:"https://www.facebook.com/?feed_demo_ad=6896440580572\u0026h=AQIWWJcmweJzx3usNaiA5t32MUU"},
+{name:"SC7_MiaThompson | SV9_GmailDarkES",cost:3190.26,leads:21.0,cpl:151.92,threePlus:0.0,cpThreePlus:null,wanted:1.0,cpWanted:3190.26,sales:1.0,cps:3190.26,ctrAll:1.93,ctrLink:1.15,cpm:28.2,impressions:113111.0,link:"https://www.facebook.com/?feed_demo_ad=6896448895972\u0026h=AQIhIvjOTGEl-lW-vAQbhjc_QWw"},
+{name:"SC10_CEO1 | SV10_RedditDarkAR",cost:2453.21,leads:5.0,cpl:490.64,threePlus:2.0,cpThreePlus:1226.61,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:3.8,ctrLink:1.15,cpm:9.33,impressions:262914.0,link:"https://www.facebook.com/?feed_demo_ad=6896443973172\u0026h=AQKHd6mRJe78mJuYG8aGPCxKoS8"},
+{name:"SC10_CEO1 | SV11_RedditDarkES",cost:2162.17,leads:5.0,cpl:432.43,threePlus:0.0,cpThreePlus:null,wanted:1.0,cpWanted:2162.17,sales:0.0,cps:null,ctrAll:1.46,ctrLink:0.93,cpm:27.71,impressions:78034.0,link:"https://www.facebook.com/?feed_demo_ad=6896449181172\u0026h=AQIaXiFNZ5Y7YNhon_ixNdx7420"},
+{name:"SC10_CEO1 | SV27_RedditDarkDisclaimer",cost:10241.0,leads:131.0,cpl:78.18,threePlus:83.0,cpThreePlus:123.39,wanted:11.0,cpWanted:931.0,sales:6.0,cps:1706.83,ctrAll:4.88,ctrLink:4.95,cpm:59.89,impressions:170995.0,link:"https://www.facebook.com/?feed_demo_ad=6935061150772\u0026h=AQIAjTxbNmYI26FQ9C7vRD-5Wbw"},
+{name:"SC6_DavidKim | SV28_GmailDarkDisclaimer",cost:172.97,leads:2.0,cpl:86.48,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.93,ctrLink:3.15,cpm:31.68,impressions:5460.0,link:"https://drive.google.com/open?id=1kNBhVUOLpAGH5aH2qPCk1Dc7_3JXviEJ\u0026usp=drive_copy"},
+{name:"SC3_MarcusSmith | SV19_GmailWhiteDisclaimer",cost:2332.06,leads:16.0,cpl:145.75,threePlus:9.0,cpThreePlus:259.12,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:4.24,ctrLink:4.26,cpm:46.36,impressions:50308.0,link:"https://drive.google.com/open?id=1mHeGLYD8mO8HjcbUVKsJyVWjR2xldjb2\u0026usp=drive_copy"},
+{name:"SC7_MiaThompson | SV19_GmailWhiteDisclaimer",cost:19039.27,leads:262.0,cpl:72.67,threePlus:154.0,cpThreePlus:123.63,wanted:9.0,cpWanted:2115.47,sales:6.0,cps:3173.21,ctrAll:8.02,ctrLink:8.38,cpm:56.07,impressions:339535.0,link:"https://www.facebook.com/?feed_demo_ad=6935057104172\u0026h=AQIbx7f8i9qTsaLsiE845-QphN0"},
+{name:"SC19_AllenMrLopez | SV29_CheckDisclaimer",cost:548.52,leads:2.0,cpl:274.26,threePlus:2.0,cpThreePlus:274.26,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.76,ctrLink:1.32,cpm:31.31,impressions:17517.0,link:"https://www.facebook.com/?feed_demo_ad=6935059203972\u0026h=AQI9IL_xtdoK_AWpkRZphgOfQ9k"},
+{name:"SC9_AnthonyReed | SV28_GmailDarkDisclaimer",cost:590.5600000000001,leads:10.0,cpl:59.06,threePlus:6.0,cpThreePlus:98.43,wanted:1.0,cpWanted:590.56,sales:1.0,cps:590.56,ctrAll:3.58,ctrLink:3.67,cpm:30.63,impressions:19280.0,link:"https://www.facebook.com/?feed_demo_ad=6935059626172\u0026h=AQKg1e1AUX5UbgIBUE2goBjgbz0"},
+{name:"SC2_MarkJensen | SV19_GmailWhiteDisclaimer",cost:3890.0,leads:54.0,cpl:72.04,threePlus:31.0,cpThreePlus:125.48,wanted:2.0,cpWanted:1945.0,sales:1.0,cps:3890.0,ctrAll:3.58,ctrLink:3.67,cpm:38.83,impressions:100169.0,link:"https://www.facebook.com/?feed_demo_ad=6949298753572\u0026h=AQLhNwRaEBiq5-TxgXKIJW9WPnk"},
+{name:"SC20_LiamAnderson | SV30_TwitterDisclaimer",cost:1418.46,leads:14.0,cpl:101.32,threePlus:7.0,cpThreePlus:202.64,wanted:1.0,cpWanted:1418.46,sales:0.0,cps:null,ctrAll:4.75,ctrLink:4.97,cpm:45.92,impressions:30888.0,link:"https://www.facebook.com/?feed_demo_ad=6935060674572\u0026h=AQIdsUwHfC2MouJceUobpaob-kU"},
+{name:"SC21_CEO2 | SV31_RedditWhiteDisclaimer",cost:1695.23,leads:21.0,cpl:80.73,threePlus:12.0,cpThreePlus:141.27,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.3,ctrLink:2.23,cpm:31.98,impressions:53009.0,link:"https://www.facebook.com/?feed_demo_ad=6935060798572\u0026h=AQLIRufC3Dg_YpbRu3BcvA-E5V0"},
+{name:"SC5_MichelleKing | SV21_GmailWhiteARDisclaimer",cost:490.2,leads:7.0,cpl:70.03,threePlus:1.0,cpThreePlus:490.2,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.15,ctrLink:1.66,cpm:9.33,impressions:52550.0,link:"https://www.facebook.com/?feed_demo_ad=6935061963572\u0026h=AQKcaBG9D5pBep_cbo6iQClozBU"},
+{name:"SC8_MeganCollins | SV21_GmailWhiteARDisclaimer",cost:8131.85,leads:96.0,cpl:84.71,threePlus:43.0,cpThreePlus:189.11,wanted:5.0,cpWanted:1626.37,sales:4.0,cps:2032.96,ctrAll:2.88,ctrLink:0.92,cpm:14.52,impressions:560049.0,link:"https://www.facebook.com/?feed_demo_ad=6935062551972\u0026h=AQKnIVHE7OF1e8pjeV_m_9PagyM"},
+{name:"SC8_MeganCollins | SV23_GmailDarkARDisclaimer",cost:9382.28,leads:131.0,cpl:71.62,threePlus:51.0,cpThreePlus:183.97,wanted:4.0,cpWanted:2345.57,sales:3.0,cps:3127.43,ctrAll:2.77,ctrLink:1.07,cpm:13.7,impressions:684796.0,link:"https://www.facebook.com/?feed_demo_ad=6935062771572\u0026h=AQLbwR6D5tWwlsYGGC8-9w_vx3c"},
+{name:"SC10_CEO1 | SV32_RedditDarkARDisclaimer",cost:1699.94,leads:12.0,cpl:141.66,threePlus:3.0,cpThreePlus:566.65,wanted:1.0,cpWanted:1699.94,sales:1.0,cps:1699.94,ctrAll:1.94,ctrLink:0.99,cpm:14.61,impressions:116356.0,link:"https://www.facebook.com/?feed_demo_ad=6935062801372\u0026h=AQKSd2K2gj9id3o9Pk36JJ5fWrA"},
+{name:"SC21_CEO2 | SV22_RedditWhiteARDisclaimer",cost:7698.97,leads:100.0,cpl:76.99,threePlus:35.0,cpThreePlus:219.97,wanted:3.0,cpWanted:2566.32,sales:3.0,cps:2566.32,ctrAll:2.15,ctrLink:1.01,cpm:16.22,impressions:474676.0,link:"https://www.facebook.com/?feed_demo_ad=6935062954972\u0026h=AQLIEPUoSkrXkpFAXvB02UBsU8E"},
+{name:"SC32_AllenMrLopezNoDate | SV29_CheckDisclaimer",cost:4250.99,leads:33.0,cpl:128.82,threePlus:27.0,cpThreePlus:157.44,wanted:1.0,cpWanted:4250.99,sales:1.0,cps:4250.99,ctrAll:1.6,ctrLink:1.21,cpm:37.52,impressions:113308.0,link:"https://www.facebook.com/?feed_demo_ad=6949298752972\u0026h=AQLydSTc4X4s3eWy4TQhTUwNghg"},
+{name:"Hit By Car Transition",cost:204.85,leads:95.0,cpl:2.16,threePlus:19.0,cpThreePlus:10.78,wanted:7.0,cpWanted:29.26,sales:5.0,cps:40.97,ctrAll:3.8,ctrLink:2.41,cpm:59.41,impressions:3448.0,link:"https://www.facebook.com/?feed_demo_ad=6641811418772\u0026h=AQKlND0xcmwF3k60QeaJsl4_JZA"},
+{name:"CLIENT - Reddit 6 Static - Dark",cost:292.57,leads:3.0,cpl:97.52,threePlus:0.0,cpThreePlus:null,wanted:1.0,cpWanted:292.57,sales:1.0,cps:292.57,ctrAll:0.75,ctrLink:0.53,cpm:57.96,impressions:5048.0,link:"https://www.facebook.com/?feed_demo_ad=6818176535772\u0026h=AQLqO3zfZ7e3adbrdkYaRWd3zfQ"},
+{name:"$175,000 Settlement",cost:1207.04,leads:4.0,cpl:301.76,threePlus:2.0,cpThreePlus:603.52,wanted:1.0,cpWanted:1207.04,sales:1.0,cps:1207.04,ctrAll:0.9,ctrLink:0.47,cpm:44.21,impressions:27302.0,link:""},
+{name:"CEO - Reddit 6 Static - Dark",cost:1324.38,leads:6.0,cpl:220.73,threePlus:2.0,cpThreePlus:662.19,wanted:1.0,cpWanted:1324.38,sales:1.0,cps:1324.38,ctrAll:0.61,ctrLink:0.4,cpm:13.7,impressions:96645.0,link:"https://www.facebook.com/?feed_demo_ad=6860516337572\u0026h=AQLQD5wc0BfIpKgP8jzGvcSJoOo"},
+{name:"CEO - Twitter 1 Static - Dark",cost:1366.19,leads:7.0,cpl:195.17,threePlus:1.0,cpThreePlus:1366.19,wanted:2.0,cpWanted:683.1,sales:1.0,cps:1366.19,ctrAll:0.64,ctrLink:0.37,cpm:27.66,impressions:49400.0,link:"https://www.facebook.com/?feed_demo_ad=6860510270172\u0026h=AQKj1QEJeA8vYOJ7C7D8p2sOdec"},
+{name:"CEO - Reddit 1 Static - Dark",cost:16435.29,leads:174.0,cpl:94.46,threePlus:71.0,cpThreePlus:231.48,wanted:9.0,cpWanted:1826.14,sales:9.0,cps:1826.14,ctrAll:3.45,ctrLink:3.46,cpm:37.36,impressions:439926.0,link:"https://www.facebook.com/?feed_demo_ad=6887948862572\u0026h=AQLJtJeR-wVyurVGsIOcyFG1Ulw"},
+{name:"CLIENT - Twitter 6 Static - Dark",cost:13627.72,leads:127.0,cpl:107.3,threePlus:54.0,cpThreePlus:252.37,wanted:8.0,cpWanted:1703.46,sales:7.0,cps:1946.82,ctrAll:3.11,ctrLink:2.93,cpm:52.52,impressions:259500.0,link:"https://www.facebook.com/?feed_demo_ad=6892769207772\u0026h=AQKbdQGynv9SdN19SwBzuxbMEqU"},
+{name:"CEO - Reddit 2 Static - White",cost:52862.94,leads:548.0,cpl:96.47,threePlus:242.0,cpThreePlus:218.44,wanted:25.0,cpWanted:2114.52,sales:21.0,cps:2517.28,ctrAll:2.31,ctrLink:2.22,cpm:23.6,impressions:2239742.0,link:"https://www.facebook.com/?feed_demo_ad=6876900766172\u0026h=AQL0MyWMBBH5HnJu1h9bOOHvhNw"},
+{name:"Settlement Quiz",cost:46211.46,leads:297.0,cpl:155.59,threePlus:115.0,cpThreePlus:401.84,wanted:19.0,cpWanted:2432.18,sales:17.0,cps:2718.32,ctrAll:0.91,ctrLink:0.63,cpm:50.36,impressions:917647.0,link:"https://www.facebook.com/?feed_demo_ad=6691757566172\u0026h=AQJFsU1mx-Jbxb3aoAHSRX0wXSQ"},
+{name:"CEO - Twitter 4 Static - White",cost:3153.84,leads:12.0,cpl:262.82,threePlus:4.0,cpThreePlus:788.46,wanted:1.0,cpWanted:3153.84,sales:1.0,cps:3153.84,ctrAll:0.63,ctrLink:0.42,cpm:29.19,impressions:108032.0,link:"https://www.facebook.com/?feed_demo_ad=6860514290172\u0026h=AQL5X-9anQLyPny6D0-vDyOIxOs"},
+{name:"CEO - Reddit 1 Static - White",cost:3614.38,leads:27.0,cpl:133.87,threePlus:10.0,cpThreePlus:361.44,wanted:1.0,cpWanted:3614.38,sales:1.0,cps:3614.38,ctrAll:0.88,ctrLink:0.62,cpm:18.72,impressions:193124.0,link:"https://www.facebook.com/?feed_demo_ad=6860516337972\u0026h=AQKXzYihPRhGZwPIcrhtculDnH8"},
+{name:"$250,000 - 4 Checks",cost:3839.31,leads:33.0,cpl:116.34,threePlus:10.0,cpThreePlus:383.93,wanted:1.0,cpWanted:3839.31,sales:1.0,cps:3839.31,ctrAll:0.82,ctrLink:0.59,cpm:26.14,impressions:146883.0,link:""},
+{name:"CLIENT - Reddit 6 Static - White",cost:7759.25,leads:71.0,cpl:109.29,threePlus:30.0,cpThreePlus:258.64,wanted:4.0,cpWanted:1939.81,sales:2.0,cps:3879.62,ctrAll:0.92,ctrLink:0.61,cpm:17.58,impressions:441445.0,link:"https://www.facebook.com/?feed_demo_ad=6833648017572\u0026h=AQLa0CKrcj_Okv11FglKQuWpcro"},
+{name:"Lopez Check Static",cost:47032.11,leads:333.0,cpl:141.24,threePlus:125.0,cpThreePlus:376.26,wanted:11.0,cpWanted:4275.65,sales:10.0,cps:4703.21,ctrAll:1.48,ctrLink:1.0,cpm:39.29,impressions:1196899.0,link:"https://www.facebook.com/?feed_demo_ad=6876900277372\u0026h=AQIODOYbVSLRsxRDRzDnf7SU7uo"},
+{name:"CLIENT - Twitter 4 Static - White",cost:5897.75,leads:18.0,cpl:327.65,threePlus:6.0,cpThreePlus:982.96,wanted:1.0,cpWanted:5897.75,sales:1.0,cps:5897.75,ctrAll:4.04,ctrLink:3.71,cpm:15.79,impressions:373547.0,link:"https://www.facebook.com/?feed_demo_ad=6873701814972\u0026h=AQKAWDSoN3hXdbff6Sg5yspX6CU"},
+{name:"Allen Check Static",cost:48956.49,leads:369.0,cpl:132.67,threePlus:156.0,cpThreePlus:313.82,wanted:11.0,cpWanted:4450.59,sales:8.0,cps:6119.56,ctrAll:1.35,ctrLink:0.73,cpm:25.11,impressions:1949629.0,link:"https://www.facebook.com/?feed_demo_ad=6892769207372\u0026h=AQLVhXReRA8KiyGCZnz-LvpycLE"},
+{name:"Car Crash Transition",cost:678.96,leads:5.0,cpl:135.79,threePlus:2.0,cpThreePlus:339.48,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:5.49,ctrLink:1.69,cpm:30.33,impressions:22384.0,link:"https://www.facebook.com/?feed_demo_ad=6649542782772\u0026h=AQKL1FbSAvmj3dGcn4IqTCpcCIg"},
+{name:"Un Accidente",cost:37810.08,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.61,ctrLink:0.35,cpm:21.82,impressions:1732795.0,link:""},
+{name:"3 Cosas",cost:2959.17,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.33,ctrLink:0.24,cpm:23.25,impressions:127270.0,link:""},
+{name:"Nealy Check Static",cost:4214.1,leads:29.0,cpl:145.31,threePlus:7.0,cpThreePlus:602.01,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.03,ctrLink:0.65,cpm:22.64,impressions:186109.0,link:"https://www.facebook.com/?feed_demo_ad=6860566904772\u0026h=AQLAxLRGB5_Ba0IfpX1XpHWyr1c"},
+{name:"Henry Check Static",cost:1802.62,leads:11.0,cpl:163.87,threePlus:1.0,cpThreePlus:1802.62,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.23,ctrLink:1.02,cpm:35.54,impressions:50724.0,link:"https://www.facebook.com/?feed_demo_ad=6814830054372\u0026h=AQJQqFF8vO8e7ZJiiFwcab8wC8s"},
+{name:"Pena Check Static",cost:660.83,leads:2.0,cpl:330.42,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.72,ctrLink:0.8,cpm:58.14,impressions:11367.0,link:"https://www.facebook.com/?feed_demo_ad=6814830056972\u0026h=AQKGjTj-ql2dbwEF5Fp0IC3INOo"},
+{name:"$65k - 5 Checks",cost:3406.11,leads:34.0,cpl:100.18,threePlus:7.0,cpThreePlus:486.59,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.9,ctrLink:0.6,cpm:15.2,impressions:224044.0,link:""},
+{name:"Tractor Trailer - White Shirt",cost:4520.59,leads:13.0,cpl:347.74,threePlus:5.0,cpThreePlus:904.12,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.51,ctrLink:2.21,cpm:21.43,impressions:210940.0,link:""},
+{name:"Senior Persona Statics",cost:4054.22,leads:29.0,cpl:139.8,threePlus:8.0,cpThreePlus:506.78,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.93,ctrLink:0.87,cpm:44.99,impressions:90106.0,link:"https://www.facebook.com/?feed_demo_ad=6748230804572\u0026h=AQLzPMFhZJy2Er8vq3lvMwAHBfs"},
+{name:"Middle-Aged Persona Statics",cost:1537.43,leads:2.0,cpl:768.72,threePlus:1.0,cpThreePlus:1537.43,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.69,ctrLink:0.37,cpm:56.18,impressions:27365.0,link:"https://www.facebook.com/?feed_demo_ad=6748231646972\u0026h=AQIdbyb81Gs5Cdtdxr4Lf84MI8s"},
+{name:"Young Adult Persona Statics",cost:1760.61,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.4,ctrLink:0.28,cpm:30.45,impressions:57818.0,link:""},
+{name:"Family Persona Statics",cost:2130.08,leads:3.0,cpl:710.03,threePlus:1.0,cpThreePlus:2130.08,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.55,ctrLink:0.3,cpm:45.54,impressions:46770.0,link:"https://www.facebook.com/?feed_demo_ad=6748235086772\u0026h=AQJfX-WplXzogLJzh4OSF4iPH8U"},
+{name:"Female Persona Statics",cost:2480.14,leads:9.0,cpl:275.57,threePlus:1.0,cpThreePlus:2480.14,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.88,ctrLink:0.74,cpm:41.02,impressions:60457.0,link:"https://www.facebook.com/?feed_demo_ad=6747953261372\u0026h=AQJJDJFh9I12CzKL8rwIt6NN6no"},
+{name:"Spanish - Young Adult Persona Statics",cost:1760.61,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.4,ctrLink:0.28,cpm:30.45,impressions:57818.0,link:""},
+{name:"Spanish - Middle-Aged Persona Statics",cost:452.82,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.6,ctrLink:0.34,cpm:51.5,impressions:8792.0,link:"https://www.facebook.com/?feed_demo_ad=6766586689972\u0026h=AQJGi_5BjMxXfHp3C5s_fB6UYpg"},
+{name:"Spanish - Senior Persona Statics",cost:881.98,leads:1.0,cpl:881.98,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.03,ctrLink:0.89,cpm:45.25,impressions:19493.0,link:"https://www.facebook.com/?feed_demo_ad=6766136845772\u0026h=AQKaqVVKbUAqvknAC72qNo24YK0"},
+{name:"Spanish - Family Persona Statics",cost:983.85,leads:1.0,cpl:983.85,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.52,ctrLink:0.27,cpm:42.09,impressions:23375.0,link:"https://www.facebook.com/?feed_demo_ad=6809115993572\u0026h=AQIMIB4M5vrVKf9L4HZtVciIkJQ"},
+{name:"CEO - Reddit 2 Static - Dark",cost:1393.32,leads:5.0,cpl:278.66,threePlus:1.0,cpThreePlus:1393.32,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.72,ctrLink:0.49,cpm:12.31,impressions:113215.0,link:"https://www.facebook.com/?feed_demo_ad=6860516338572\u0026h=AQJNk_3-Mq1iKobmm6uyqo1jXE4"},
+{name:"CEO - Reddit 3 Static - White",cost:665.53,leads:1.0,cpl:665.53,threePlus:1.0,cpThreePlus:665.53,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.73,ctrLink:0.34,cpm:20.57,impressions:32362.0,link:"https://www.facebook.com/?feed_demo_ad=6818069061772\u0026h=AQKYeCybjgWIb810vui5XmfTc8o"},
+{name:"CEO - Reddit 3 Static - Dark",cost:1553.36,leads:7.0,cpl:221.91,threePlus:3.0,cpThreePlus:517.79,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.67,ctrLink:0.4,cpm:11.7,impressions:132758.0,link:"https://www.facebook.com/?feed_demo_ad=6860516340172\u0026h=AQJc5OwCFcV0nQYQzId5Ud8FRRA"},
+{name:"CEO - Reddit 4 Static - White",cost:532.65,leads:2.0,cpl:266.32,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.77,ctrLink:0.53,cpm:42.49,impressions:12535.0,link:"https://www.facebook.com/?feed_demo_ad=6860516338972\u0026h=AQIFe0t9qvAxNvwSPS4fIFZbYiQ"},
+{name:"CEO - Reddit 4 Static - Dark",cost:663.62,leads:4.0,cpl:165.91,threePlus:1.0,cpThreePlus:663.62,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.66,ctrLink:0.45,cpm:54.8,impressions:12109.0,link:"https://www.facebook.com/?feed_demo_ad=6860516340972\u0026h=AQI2Htpv0zBRlB01VfQaJqPpmbc"},
+{name:"CEO - Reddit 5 Static - White",cost:931.11,leads:4.0,cpl:232.78,threePlus:2.0,cpThreePlus:465.56,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.78,ctrLink:0.5,cpm:17.7,impressions:52608.0,link:"https://www.facebook.com/?feed_demo_ad=6860516340772\u0026h=AQL7NESCBrAii23j5PX05AmK4kE"},
+{name:"CEO - Reddit 5 Static - Dark",cost:405.92,leads:1.0,cpl:405.92,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.72,ctrLink:0.49,cpm:11.15,impressions:36412.0,link:"https://www.facebook.com/?feed_demo_ad=6860516339572\u0026h=AQIuJ4m_emVda3pljzsI5W79S1U"},
+{name:"CEO - Reddit 6 Static - White",cost:2182.51,leads:9.0,cpl:242.5,threePlus:4.0,cpThreePlus:545.63,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.73,ctrLink:0.53,cpm:21.97,impressions:99347.0,link:"https://www.facebook.com/?feed_demo_ad=6818143869972\u0026h=AQLWH3Bh64clr_fTL0lTeJy_d-w"},
+{name:"CLIENT - Reddit 1 Static - White",cost:935.97,leads:5.0,cpl:187.19,threePlus:2.0,cpThreePlus:467.99,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.63,ctrLink:0.47,cpm:17.42,impressions:53717.0,link:"https://www.facebook.com/?feed_demo_ad=6845519205172\u0026h=AQK7tQ0xrMrxDEXOa7a5Xqk30SU"},
+{name:"CLIENT - Reddit 1 Static - Dark",cost:509.15,leads:1.0,cpl:509.15,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.45,ctrLink:0.35,cpm:10.98,impressions:46355.0,link:"https://www.facebook.com/?feed_demo_ad=6845519195772\u0026h=AQJcBlChdg63ONKCneDHv7wN7fo"},
+{name:"CLIENT - Reddit 2 Static - White",cost:385.37,leads:1.0,cpl:385.37,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.67,ctrLink:0.46,cpm:39.82,impressions:9678.0,link:"https://www.facebook.com/?feed_demo_ad=6845519204972\u0026h=AQLNMAe9w3w6XbEBwr8EqgXe0NQ"},
+{name:"CLIENT - Reddit 2 Static - Dark",cost:668.12,leads:4.0,cpl:167.03,threePlus:2.0,cpThreePlus:334.06,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.82,ctrLink:0.48,cpm:41.52,impressions:16092.0,link:"https://www.facebook.com/?feed_demo_ad=6818176536172\u0026h=AQJRutWtnDFeWzOKznl1HwL-UcI"},
+{name:"CLIENT - Reddit 3 Static - White",cost:410.29,leads:1.0,cpl:410.29,threePlus:1.0,cpThreePlus:410.29,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.8,ctrLink:0.58,cpm:16.82,impressions:24392.0,link:"https://www.facebook.com/?feed_demo_ad=6845519195572\u0026h=AQIJpO7TS1O1B26agFs-TToXWyw"},
+{name:"CLIENT - Reddit 3 Static - Dark",cost:260.31,leads:1.0,cpl:260.31,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.7,ctrLink:0.49,cpm:49.16,impressions:5295.0,link:"https://www.facebook.com/?feed_demo_ad=6818176537972\u0026h=AQKi_qUYILaoEAMWOcUb2_UREac"},
+{name:"CLIENT - Reddit 4 Static - White",cost:610.02,leads:5.0,cpl:122.0,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.77,ctrLink:0.53,cpm:72.26,impressions:8442.0,link:"https://www.facebook.com/?feed_demo_ad=6818176538772\u0026h=AQIHRDRp-b7tMDfvH00wm2Nc2cg"},
+{name:"CLIENT - Reddit 4 Static - Dark",cost:1135.71,leads:3.0,cpl:378.57,threePlus:1.0,cpThreePlus:1135.71,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.61,ctrLink:0.38,cpm:37.86,impressions:29998.0,link:"https://www.facebook.com/?feed_demo_ad=6818176540372\u0026h=AQInHXyak51MhN8LkFoPMOViuag"},
+{name:"CLIENT - Reddit 5 Static - White",cost:2107.9,leads:15.0,cpl:140.53,threePlus:6.0,cpThreePlus:351.32,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.85,ctrLink:0.54,cpm:41.32,impressions:51017.0,link:"https://www.facebook.com/?feed_demo_ad=6818176537172\u0026h=AQKSEipmFLqubeLzfxiSs1cNKYs"},
+{name:"CLIENT - Reddit 5 Static - Dark",cost:63.74,leads:1.0,cpl:63.74,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.45,ctrLink:0.3,cpm:47.82,impressions:1333.0,link:"https://www.facebook.com/?feed_demo_ad=6818176536772\u0026h=AQIsWdrd6B57GsRsmTyDg-yagOk"},
+{name:"CEO - Twitter 1 Static - White",cost:1599.9,leads:11.0,cpl:145.45,threePlus:7.0,cpThreePlus:228.56,wanted:1.0,cpWanted:1599.9,sales:0.0,cps:null,ctrAll:0.7,ctrLink:0.49,cpm:24.94,impressions:64159.0,link:"https://www.facebook.com/?feed_demo_ad=6860510267372\u0026h=AQIVZLXWt5nSscjhxlJDJLCSW78"},
+{name:"CEO - Twitter 2 Static - White",cost:1353.97,leads:4.0,cpl:338.49,threePlus:2.0,cpThreePlus:676.99,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.38,ctrLink:0.45,cpm:19.07,impressions:71011.0,link:"https://www.facebook.com/?feed_demo_ad=6860514290772\u0026h=AQI0_5daT-6wF2oHCRkUVV9UM0w"},
+{name:"CEO - Twitter 2 Static - Dark",cost:1054.23,leads:8.0,cpl:131.78,threePlus:1.0,cpThreePlus:1054.23,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.71,ctrLink:0.43,cpm:14.01,impressions:75261.0,link:"https://www.facebook.com/?feed_demo_ad=6860514291372\u0026h=AQJx3FCLfIkWiZISkoqrmvqCmCk"},
+{name:"CEO - Twitter 3 Static - White",cost:829.01,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.61,ctrLink:0.31,cpm:11.12,impressions:74541.0,link:"https://www.facebook.com/?feed_demo_ad=6860514288972\u0026h=AQIsVFooRHO5igpS6DRZ3DJ_dcg"},
+{name:"CEO - Twitter 3 Static - Dark",cost:1054.42,leads:3.0,cpl:351.47,threePlus:1.0,cpThreePlus:1054.42,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.69,ctrLink:0.4,cpm:28.55,impressions:36926.0,link:"https://www.facebook.com/?feed_demo_ad=6845519197772\u0026h=AQKUxa0Ekamb2x3gDvgIX12KsXg"},
+{name:"CEO - Twitter 4 Static - Dark",cost:532.7,leads:1.0,cpl:532.7,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.63,ctrLink:0.52,cpm:11.59,impressions:45968.0,link:"https://www.facebook.com/?feed_demo_ad=6860514289572\u0026h=AQKtsU5G6E21wSPLmVcyljze810"},
+{name:"CEO - Twitter 5 Static - White",cost:455.89,leads:2.0,cpl:227.94,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.68,ctrLink:0.37,cpm:15.78,impressions:28890.0,link:"https://www.facebook.com/?feed_demo_ad=6860514289172\u0026h=AQJZYhvrR6m6sVtzXAH72TjI1RY"},
+{name:"CEO - Twitter 5 Static - Dark",cost:583.08,leads:1.0,cpl:583.08,threePlus:1.0,cpThreePlus:583.08,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.43,ctrLink:0.31,cpm:10.66,impressions:54723.0,link:"https://www.facebook.com/?feed_demo_ad=6860514290972\u0026h=AQI4BO8PO-l42P6_zZ6jCIAhLAY"},
+{name:"CEO - Twitter 6 Static - White",cost:623.9,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.71,ctrLink:0.44,cpm:17.0,impressions:36690.0,link:"https://www.facebook.com/?feed_demo_ad=6860514291172\u0026h=AQJrBACUvMGy6XOTP6GZ11rdwd8"},
+{name:"CEO - Twitter 6 Static - Dark",cost:1350.57,leads:7.0,cpl:192.94,threePlus:3.0,cpThreePlus:450.19,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.83,ctrLink:0.57,cpm:17.08,impressions:79096.0,link:"https://www.facebook.com/?feed_demo_ad=6860514289372\u0026h=AQKVvbeSjRrprEVvebrgEfYKc2A"},
+{name:"CLIENT - Twitter 1 Static - White",cost:975.36,leads:1.0,cpl:975.36,threePlus:1.0,cpThreePlus:975.36,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.82,ctrLink:0.47,cpm:33.61,impressions:29023.0,link:"https://www.facebook.com/?feed_demo_ad=6818176535372\u0026h=AQJRtNFJ9s1uP3qep8NoKS7kQiI"},
+{name:"CLIENT - Twitter 1 Static - Dark",cost:235.79,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.71,ctrLink:0.48,cpm:30.9,impressions:7631.0,link:"https://www.facebook.com/?feed_demo_ad=6818176539372\u0026h=AQJ2Bi30Ilp-eH4xYIfAxqhArW4"},
+{name:"CLIENT - Twitter 2 Static - White",cost:1108.88,leads:5.0,cpl:221.78,threePlus:2.0,cpThreePlus:554.44,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.57,ctrLink:0.41,cpm:28.28,impressions:39208.0,link:"https://www.facebook.com/?feed_demo_ad=6818176537372\u0026h=AQLoPu7aWdVIm61IyxminKam7lw"},
+{name:"CLIENT - Twitter 2 Static - Dark",cost:1320.54,leads:5.0,cpl:264.11,threePlus:1.0,cpThreePlus:1320.54,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.8,ctrLink:0.53,cpm:32.84,impressions:40214.0,link:"https://www.facebook.com/?feed_demo_ad=6818176538172\u0026h=AQIJBlV3B_7RgcppSf85CP6p3Bk"},
+{name:"CLIENT - Twitter 3 Static - White",cost:1442.22,leads:2.0,cpl:721.11,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.99,ctrLink:0.84,cpm:22.02,impressions:65503.0,link:"https://www.facebook.com/?feed_demo_ad=6845519202372\u0026h=AQLzwc3B-iq6xFvxuh0a5jnjIzo"},
+{name:"CLIENT - Twitter 3 Static - Dark",cost:1348.48,leads:6.0,cpl:224.75,threePlus:1.0,cpThreePlus:1348.48,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.2,ctrLink:0.99,cpm:25.58,impressions:52707.0,link:"https://www.facebook.com/?feed_demo_ad=6818176540572\u0026h=AQIWucGR8IOxpSn8Kn2rK6DNQw8"},
+{name:"CLIENT - Twitter 4 Static - Dark",cost:764.93,leads:3.0,cpl:254.98,threePlus:1.0,cpThreePlus:764.93,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:2.55,ctrLink:2.42,cpm:27.31,impressions:28006.0,link:"https://www.facebook.com/?feed_demo_ad=6845519201972\u0026h=AQKsHr0KCsz1CYggh2g6IGJbQHw"},
+{name:"CLIENT - Twitter 5 Static - White",cost:1781.85,leads:11.0,cpl:161.99,threePlus:1.0,cpThreePlus:1781.85,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.45,ctrLink:1.16,cpm:32.76,impressions:54390.0,link:"https://www.facebook.com/?feed_demo_ad=6818176536572\u0026h=AQLKvSo0n1QKD3lt5sJbesoW6Fs"},
+{name:"CLIENT - Twitter 5 Static - Dark",cost:970.53,leads:2.0,cpl:485.26,threePlus:1.0,cpThreePlus:970.53,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:1.1,ctrLink:0.81,cpm:40.71,impressions:23842.0,link:"https://www.facebook.com/?feed_demo_ad=6845519200972\u0026h=AQKk8cOs3xQvH2_wtuHZtgX6VHc"},
+{name:"CLIENT - Twitter 6 Static - White",cost:154.36,leads:1.0,cpl:154.36,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.85,ctrLink:0.54,cpm:32.13,impressions:4804.0,link:"https://www.facebook.com/?feed_demo_ad=6818176538372\u0026h=AQIVFUAS3yaRnGrMI-rM28ckGjE"},
+{name:"SC16_Injured_FreeConsultation",cost:5.32,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,ctrAll:0.65,ctrLink:0.44,cpm:11.59,impressions:459.0,link:"https://www.facebook.com/?feed_demo_ad=6913351631372\u0026h=AQLn-sfjFtyWkitPrPdZRwhjNhg"}],
+staticConcepts:[{name:"CEO",cost:96522.70999999998,leads:844.0,cpl:114.36,threePlus:357.0,cpThreePlus:270.37,wanted:40.0,cpWanted:2413.07,sales:34.0,cps:2838.9,ctrAll:null,ctrLink:null,cpm:23.06,impressions:4185480.0,link:"https://www.facebook.com/?feed_demo_ad=6876900766172\u0026h=AQL0MyWMBBH5HnJu1h9bOOHvhNw",variations:24},
+{name:"MiaThompson",cost:53498.54000000001,leads:621.0,cpl:86.15,threePlus:305.0,cpThreePlus:175.41,wanted:18.0,cpWanted:2972.14,sales:13.0,cps:4115.27,ctrAll:null,ctrLink:null,cpm:33.87,impressions:1579355.0,link:"https://drive.google.com/file/d/1rml2Tdkn7IMtgv3tx9zccwDj3rT9V8ur/view?usp=drive_link",variations:6},
+{name:"Allen Check Static",cost:48956.49,leads:369.0,cpl:132.67,threePlus:156.0,cpThreePlus:313.82,wanted:11.0,cpWanted:4450.59,sales:8.0,cps:6119.56,ctrAll:null,ctrLink:null,cpm:25.11,impressions:1949629.0,link:"https://www.facebook.com/?feed_demo_ad=6892769207372\u0026h=AQLVhXReRA8KiyGCZnz-LvpycLE",variations:1},
+{name:"Lopez Check Static",cost:47032.11,leads:333.0,cpl:141.24,threePlus:125.0,cpThreePlus:376.26,wanted:11.0,cpWanted:4275.65,sales:10.0,cps:4703.21,ctrAll:null,ctrLink:null,cpm:39.29,impressions:1196899.0,link:"https://www.facebook.com/?feed_demo_ad=6876900277372\u0026h=AQIODOYbVSLRsxRDRzDnf7SU7uo",variations:1},
+{name:"Settlement Quiz",cost:46211.46,leads:297.0,cpl:155.59,threePlus:115.0,cpThreePlus:401.84,wanted:19.0,cpWanted:2432.18,sales:17.0,cps:2718.32,ctrAll:null,ctrLink:null,cpm:50.36,impressions:917647.0,link:"https://www.facebook.com/?feed_demo_ad=6691757566172\u0026h=AQJFsU1mx-Jbxb3aoAHSRX0wXSQ",variations:1},
+{name:"CLIENT",cost:44766.810000000005,leads:292.0,cpl:153.31,threePlus:110.0,cpThreePlus:406.97,wanted:14.0,cpWanted:3197.63,sales:11.0,cps:4069.71,ctrAll:null,ctrLink:null,cpm:26.79,impressions:1671187.0,link:"https://www.facebook.com/?feed_demo_ad=6892769207772\u0026h=AQKbdQGynv9SdN19SwBzuxbMEqU",variations:24},
+{name:"MeganCollins",cost:38042.96,leads:458.0,cpl:83.06,threePlus:189.0,cpThreePlus:201.29,wanted:21.0,cpWanted:1811.57,sales:18.0,cps:2113.5,ctrAll:null,ctrLink:null,cpm:18.5,impressions:2056288.0,link:"https://drive.google.com/file/d/19JR5a_9f5XRO8XHmcjasstSo94PUhqQg/view?usp=drive_link",variations:6},
+{name:"Un Accidente",cost:37810.08,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:21.82,impressions:1732795.0,link:"",variations:1},
+{name:"AnthonyReed",cost:36164.13,leads:396.0,cpl:91.32,threePlus:153.0,cpThreePlus:236.37,wanted:4.0,cpWanted:9041.03,sales:4.0,cps:9041.03,ctrAll:null,ctrLink:null,cpm:48.15,impressions:751066.0,link:"https://drive.google.com/file/d/1lSf_YwPUiRAmGTn7pAjBvHOluSKnu7rs/view?usp=drive_link",variations:3},
+{name:"MarkJensen",cost:28744.550000000003,leads:337.0,cpl:85.3,threePlus:167.0,cpThreePlus:172.12,wanted:9.0,cpWanted:3193.84,sales:6.0,cps:4790.76,ctrAll:null,ctrLink:null,cpm:45.95,impressions:625590.0,link:"https://drive.google.com/file/d/1ZdyZV7p-yvUz8V37eLcUHNOpYBGFOkqC/view?usp=drive_link",variations:3},
+{name:"CEO1",cost:19342.32,leads:169.0,cpl:114.45,threePlus:90.0,cpThreePlus:214.91,wanted:13.0,cpWanted:1487.87,sales:7.0,cps:2763.19,ctrAll:null,ctrLink:null,cpm:20.07,impressions:963587.0,link:"https://www.facebook.com/?feed_demo_ad=6935061150772\u0026h=AQIAjTxbNmYI26FQ9C7vRD-5Wbw",variations:6},
+{name:"MichelleKing",cost:15042.310000000003,leads:141.0,cpl:106.68,threePlus:48.0,cpThreePlus:313.38,wanted:6.0,cpWanted:2507.05,sales:5.0,cps:3008.46,ctrAll:null,ctrLink:null,cpm:28.3,impressions:531614.0,link:"https://drive.google.com/file/d/1-v05xEFaEn83PaDgy7aQrnuOccW1JeQL/view?usp=drive_link",variations:5},
+{name:"DavidKim",cost:13941.3,leads:148.0,cpl:94.2,threePlus:54.0,cpThreePlus:258.17,wanted:7.0,cpWanted:1991.61,sales:5.0,cps:2788.26,ctrAll:null,ctrLink:null,cpm:42.35,impressions:329162.0,link:"https://drive.google.com/file/d/1YMNoty1nac7Bj1_Nozc4Sr9Ij9s0xE5c/view?usp=drive_link",variations:3},
+{name:"CEO2",cost:9394.2,leads:121.0,cpl:77.64,threePlus:47.0,cpThreePlus:199.88,wanted:3.0,cpWanted:3131.4,sales:3.0,cps:3131.4,ctrAll:null,ctrLink:null,cpm:17.8,impressions:527685.0,link:"https://www.facebook.com/?feed_demo_ad=6935062954972\u0026h=AQLIEPUoSkrXkpFAXvB02UBsU8E",variations:2},
+{name:"Tractor Trailer",cost:4520.59,leads:13.0,cpl:347.74,threePlus:5.0,cpThreePlus:904.12,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:21.43,impressions:210940.0,link:"",variations:1},
+{name:"MarcusSmith",cost:4460.27,leads:34.0,cpl:131.18,threePlus:21.0,cpThreePlus:212.39,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:41.94,impressions:106343.0,link:"https://drive.google.com/open?id=1mHeGLYD8mO8HjcbUVKsJyVWjR2xldjb2\u0026usp=drive_copy",variations:2},
+{name:"AllenMrLopezNoDate",cost:4250.99,leads:33.0,cpl:128.82,threePlus:27.0,cpThreePlus:157.44,wanted:1.0,cpWanted:4250.99,sales:1.0,cps:4250.99,ctrAll:null,ctrLink:null,cpm:37.52,impressions:113308.0,link:"https://www.facebook.com/?feed_demo_ad=6949298752972\u0026h=AQLydSTc4X4s3eWy4TQhTUwNghg",variations:1},
+{name:"Nealy Check Static",cost:4214.1,leads:29.0,cpl:145.31,threePlus:7.0,cpThreePlus:602.01,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:22.64,impressions:186109.0,link:"https://www.facebook.com/?feed_demo_ad=6860566904772\u0026h=AQLAxLRGB5_Ba0IfpX1XpHWyr1c",variations:1},
+{name:"Spanish",cost:4079.2599999999998,leads:2.0,cpl:2039.63,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:37.26,impressions:109478.0,link:"https://www.facebook.com/?feed_demo_ad=6809115993572\u0026h=AQIMIB4M5vrVKf9L4HZtVciIkJQ",variations:4},
+{name:"Senior Persona Statics",cost:4054.22,leads:29.0,cpl:139.8,threePlus:8.0,cpThreePlus:506.78,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:44.99,impressions:90106.0,link:"https://www.facebook.com/?feed_demo_ad=6748230804572\u0026h=AQLzPMFhZJy2Er8vq3lvMwAHBfs",variations:1},
+{name:"$250,000",cost:3839.31,leads:33.0,cpl:116.34,threePlus:10.0,cpThreePlus:383.93,wanted:1.0,cpWanted:3839.31,sales:1.0,cps:3839.31,ctrAll:null,ctrLink:null,cpm:26.14,impressions:146883.0,link:"",variations:1},
+{name:"$65k",cost:3406.11,leads:34.0,cpl:100.18,threePlus:7.0,cpThreePlus:486.59,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:15.2,impressions:224044.0,link:"",variations:1},
+{name:"3 Cosas",cost:2959.17,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:23.25,impressions:127270.0,link:"",variations:1},
+{name:"Female Persona Statics",cost:2480.14,leads:9.0,cpl:275.57,threePlus:1.0,cpThreePlus:2480.14,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:41.02,impressions:60457.0,link:"https://www.facebook.com/?feed_demo_ad=6747953261372\u0026h=AQJJDJFh9I12CzKL8rwIt6NN6no",variations:1},
+{name:"RachelTorres",cost:2204.1400000000003,leads:14.0,cpl:157.44,threePlus:7.0,cpThreePlus:314.88,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:43.3,impressions:50901.0,link:"https://drive.google.com/file/d/1CBxAN39loCxGgxCabRamtVzErpJmSljT/view?usp=drive_link",variations:2},
+{name:"Family Persona Statics",cost:2130.08,leads:3.0,cpl:710.03,threePlus:1.0,cpThreePlus:2130.08,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:45.54,impressions:46770.0,link:"https://www.facebook.com/?feed_demo_ad=6748235086772\u0026h=AQJfX-WplXzogLJzh4OSF4iPH8U",variations:1},
+{name:"Henry Check Static",cost:1802.62,leads:11.0,cpl:163.87,threePlus:1.0,cpThreePlus:1802.62,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:35.54,impressions:50724.0,link:"https://www.facebook.com/?feed_demo_ad=6814830054372\u0026h=AQJQqFF8vO8e7ZJiiFwcab8wC8s",variations:1},
+{name:"Young Adult Persona Statics",cost:1760.61,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:30.45,impressions:57818.0,link:"",variations:1},
+{name:"Middle-Aged Persona Statics",cost:1537.43,leads:2.0,cpl:768.72,threePlus:1.0,cpThreePlus:1537.43,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:56.18,impressions:27365.0,link:"https://www.facebook.com/?feed_demo_ad=6748231646972\u0026h=AQIdbyb81Gs5Cdtdxr4Lf84MI8s",variations:1},
+{name:"LiamAnderson",cost:1418.46,leads:14.0,cpl:101.32,threePlus:7.0,cpThreePlus:202.64,wanted:1.0,cpWanted:1418.46,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:45.92,impressions:30888.0,link:"https://www.facebook.com/?feed_demo_ad=6935060674572\u0026h=AQIdsUwHfC2MouJceUobpaob-kU",variations:1},
+{name:"$175,000 Settlement",cost:1207.04,leads:4.0,cpl:301.76,threePlus:2.0,cpThreePlus:603.52,wanted:1.0,cpWanted:1207.04,sales:1.0,cps:1207.04,ctrAll:null,ctrLink:null,cpm:44.21,impressions:27302.0,link:"",variations:1},
+{name:"Car Crash Transition",cost:678.96,leads:5.0,cpl:135.79,threePlus:2.0,cpThreePlus:339.48,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:30.33,impressions:22384.0,link:"https://www.facebook.com/?feed_demo_ad=6649542782772\u0026h=AQKL1FbSAvmj3dGcn4IqTCpcCIg",variations:1},
+{name:"Pena Check Static",cost:660.83,leads:2.0,cpl:330.42,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:58.14,impressions:11367.0,link:"https://www.facebook.com/?feed_demo_ad=6814830056972\u0026h=AQKGjTj-ql2dbwEF5Fp0IC3INOo",variations:1},
+{name:"AllenMrLopez",cost:548.52,leads:2.0,cpl:274.26,threePlus:2.0,cpThreePlus:274.26,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:31.31,impressions:17517.0,link:"https://www.facebook.com/?feed_demo_ad=6935059203972\u0026h=AQI9IL_xtdoK_AWpkRZphgOfQ9k",variations:1},
+{name:"Hit By Car Transition",cost:204.85,leads:95.0,cpl:2.16,threePlus:19.0,cpThreePlus:10.78,wanted:7.0,cpWanted:29.26,sales:5.0,cps:40.97,ctrAll:null,ctrLink:null,cpm:59.41,impressions:3448.0,link:"https://www.facebook.com/?feed_demo_ad=6641811418772\u0026h=AQKlND0xcmwF3k60QeaJsl4_JZA",variations:1},
+{name:"SC16_Injured_FreeConsultation",cost:5.32,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,ctrAll:null,ctrLink:null,cpm:11.59,impressions:459.0,link:"https://www.facebook.com/?feed_demo_ad=6913351631372\u0026h=AQLn-sfjFtyWkitPrPdZRwhjNhg",variations:1}],
+videos:[{name:"VHK1_Testi_AllenEn | VB1_Testi_AllenEn | VV5_Testi_AllenSp",cost:2154.23,leads:5.0,cpl:430.85,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:26.69,holdRate:59.48,ctrAll:3.08,ctrLink:2.9,cpm:43.46,impressions:49570.0,link:"https://drive.google.com/file/d/1u6n6smRl3pPriswYte5rpwhEOwA9oq48/view?usp=drive_link"},
+{name:"VHK19_BabaJustGotAccident | VB14_CEOBody | VV15_AliFaroukie",cost:246.0,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:28.23,holdRate:30.63,ctrAll:3.49,ctrLink:2.1,cpm:27.91,impressions:8814.0,link:"https://www.facebook.com/?feed_demo_ad=6915914314172\u0026h=AQJs9Q--cV9kTJv06930duwI1AY"},
+{name:"VHK20_YoucanSwitchLawyerAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",cost:1109.79,leads:4.0,cpl:277.45,threePlus:3.0,cpThreePlus:369.93,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:35.62,holdRate:40.0,ctrAll:5.79,ctrLink:3.48,cpm:20.03,impressions:55393.0,link:"https://www.facebook.com/?feed_demo_ad=6915915232972\u0026h=AQI3hXXftxQoQssoeZdh6Yh1JV0"},
+{name:"VHK21_ArabicPodcastAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",cost:1533.2,leads:6.0,cpl:255.53,threePlus:3.0,cpThreePlus:511.07,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:33.33,holdRate:34.07,ctrAll:6.91,ctrLink:3.39,cpm:17.6,impressions:87093.0,link:"https://www.facebook.com/?feed_demo_ad=6915915548172\u0026h=AQJTSHohDzi4cSVJcgx2OFg_uPo"},
+{name:"VHK22_BabaJustGotAccidentAR | VB15_CEOBodyAR | VV16_AliFaroukieAR",cost:932.89,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:40.71,holdRate:29.31,ctrAll:5.75,ctrLink:3.88,cpm:18.19,impressions:51276.0,link:"https://www.facebook.com/?feed_demo_ad=6915916464772\u0026h=AQJvHt6qCwpf52pSJDBpYsR9-dk"},
+{name:"VHK23_YouSayWhat | VB16_InsuranceScam | VV17_AliDevonteCollab",cost:215.91,leads:1.0,cpl:215.91,threePlus:1.0,cpThreePlus:215.91,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:26.65,holdRate:24.45,ctrAll:1.9,ctrLink:1.56,cpm:52.7,impressions:4097.0,link:"https://www.facebook.com/?feed_demo_ad=6916099074572\u0026h=AQLW-5R8JbRA2FS3wKM2xAHPy9M"},
+{name:"VHK24_PickUpCheck | VB17_BabyMamaCheck | VV17_AliDevonteCollab",cost:836.5899999999999,leads:12.0,cpl:69.72,threePlus:6.0,cpThreePlus:139.43,wanted:1.0,cpWanted:836.59,sales:1.0,cps:836.59,hookRate:76.93,holdRate:81.73,ctrAll:25.91,ctrLink:28.0,cpm:66.58,impressions:12566.0,link:"https://www.facebook.com/?feed_demo_ad=6934753134572\u0026h=AQIh4i7N8PLXfcxmYq8f6DVNvww"},
+{name:"VHK25_GotACheck | VB18_GotmeaCheck | VV17_AliDevonteCollab",cost:11061.72,leads:158.0,cpl:70.01,threePlus:66.0,cpThreePlus:167.6,wanted:9.0,cpWanted:1229.08,sales:7.0,cps:1580.25,hookRate:31.97,holdRate:24.06,ctrAll:2.07,ctrLink:1.58,cpm:43.34,impressions:255204.0,link:"https://www.facebook.com/?feed_demo_ad=6916098488972\u0026h=AQI-4gYkix2RDFIhHYzueVzoPCQ"},
+{name:"VHK27_CommercialPolicy | VB19_LoveoftheGame | VV17_AliDevonteCollab",cost:408.55999999999995,leads:6.0,cpl:68.09,threePlus:3.0,cpThreePlus:136.19,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:67.73,holdRate:81.05,ctrAll:22.2,ctrLink:24.85,cpm:69.35,impressions:5891.0,link:"https://www.facebook.com/?feed_demo_ad=6934753133572\u0026h=AQJxzkUrQymStIgHTrhnhvKcTQI"},
+{name:"VHK28_IDidEverything | VB20_NoDoubtAtAll | VV17_AliDevonteCollab",cost:5081.35,leads:69.0,cpl:73.64,threePlus:35.0,cpThreePlus:145.18,wanted:2.0,cpWanted:2540.68,sales:2.0,cps:2540.68,hookRate:40.93,holdRate:44.51,ctrAll:3.52,ctrLink:2.26,cpm:63.81,impressions:79627.0,link:"https://www.facebook.com/?feed_demo_ad=6916097830972\u0026h=AQIjcgV3psrlkkOTsCko1MmIoHo"},
+{name:"VHK29_PickUpSettlement | VB21_SettlementCheck | VV17_AliDevonteCollab",cost:3942.57,leads:71.0,cpl:55.53,threePlus:43.0,cpThreePlus:91.69,wanted:2.0,cpWanted:1971.29,sales:1.0,cps:3942.57,hookRate:26.1,holdRate:50.39,ctrAll:2.38,ctrLink:1.93,cpm:40.62,impressions:97048.0,link:"https://www.facebook.com/?feed_demo_ad=6916097514972\u0026h=AQIrklZxunfMQ7VIxvRPx_g7RNY"},
+{name:"VHK30_Awww | VB22_WhyDoNeedCrutches | VV17_AliDevonteCollab",cost:1001.22,leads:8.0,cpl:125.15,threePlus:4.0,cpThreePlus:250.31,wanted:3.0,cpWanted:333.74,sales:2.0,cps:500.61,hookRate:71.08,holdRate:80.79,ctrAll:25.13,ctrLink:28.69,cpm:52.53,impressions:19060.0,link:"https://www.facebook.com/?feed_demo_ad=6934753133772\u0026h=AQIxT2wuxnhP-U6WaHJ2f3ty4Fg"},
+{name:"VHK31_HowCarLooksLike | VB23_BigCheck | VV18_AliFarzyCollab",cost:2441.0,leads:37.0,cpl:65.97,threePlus:13.0,cpThreePlus:187.77,wanted:6.0,cpWanted:406.83,sales:4.0,cps:610.25,hookRate:23.53,holdRate:31.71,ctrAll:2.42,ctrLink:1.38,cpm:22.55,impressions:108255.0,link:"https://www.facebook.com/?feed_demo_ad=6934753133972\u0026h=AQIXCg4-Yj9Kh0xje7V3-1ghkXo"},
+{name:"VHK32_BetterPayforThis | VB24_JustGotRear | VV18_AliFarzyCollab",cost:961.19,leads:11.0,cpl:87.38,threePlus:5.0,cpThreePlus:192.24,wanted:1.0,cpWanted:961.19,sales:0.0,cps:null,hookRate:35.45,holdRate:68.74,ctrAll:8.38,ctrLink:8.81,cpm:44.16,impressions:21765.0,link:"https://www.facebook.com/?feed_demo_ad=6916096994972\u0026h=AQJrsfrvwley2HUdfaB_5HP9md4"},
+{name:"VHK33_YouDontBuyLawyer | VB25_YupThatsMyDad | VV18_AliFarzyCollab",cost:1872.61,leads:35.0,cpl:53.5,threePlus:14.0,cpThreePlus:133.76,wanted:4.0,cpWanted:468.15,sales:4.0,cps:468.15,hookRate:41.73,holdRate:25.69,ctrAll:1.91,ctrLink:0.42,cpm:14.27,impressions:131189.0,link:"https://www.facebook.com/?feed_demo_ad=6916096899572\u0026h=AQIqatzwYaW_gN5yErUJsSoUZ-U"},
+{name:"VHK34_WhySpendingMoney | VB25_YupThatsMyDad | VV18_AliFarzyCollab",cost:2556.05,leads:38.0,cpl:67.26,threePlus:18.0,cpThreePlus:142.0,wanted:2.0,cpWanted:1278.03,sales:2.0,cps:1278.03,hookRate:41.04,holdRate:38.9,ctrAll:5.11,ctrLink:4.4,cpm:27.72,impressions:92200.0,link:"https://www.facebook.com/?feed_demo_ad=6916096851172\u0026h=AQLeSddtbXv_faRBhesF6hM_CTY"},
+{name:"VHK35_WeHaveInsurance | VB25_YupThatsMyDad | VV18_AliFarzyCollab",cost:2150.71,leads:28.0,cpl:76.81,threePlus:14.0,cpThreePlus:153.62,wanted:2.0,cpWanted:1075.36,sales:2.0,cps:1075.36,hookRate:72.03,holdRate:79.44,ctrAll:22.95,ctrLink:25.57,cpm:53.57,impressions:40144.0,link:"https://www.facebook.com/?feed_demo_ad=6934753135172\u0026h=AQJxq35-vTxtcQFrXxnGEZysz7Q"},
+{name:"Farzy Collab - Story Body 1 - CID3KFSHLN",cost:2452.28,leads:36.0,cpl:68.12,threePlus:16.0,cpThreePlus:153.27,wanted:5.0,cpWanted:490.46,sales:1.0,cps:2452.28,hookRate:27.05,holdRate:37.55,ctrAll:3.03,ctrLink:2.69,cpm:24.6,impressions:99692.0,link:"https://www.facebook.com/?feed_demo_ad=6948091695372\u0026h=AQJMi9HlkeJ0ClTP7m7Gg4ZbA34"},
+{name:"Farzy Collab - Story Body - CID9WJBX93",cost:189.06,leads:1.0,cpl:189.06,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:31.04,holdRate:64.37,ctrAll:4.6,ctrLink:4.73,cpm:48.06,impressions:3934.0,link:"https://www.facebook.com/?feed_demo_ad=6948091603172\u0026h=AQJdw3BHPgb2mPKAIA-Jmk4e_Rg"},
+{name:"Farzy Collab - Story Lead 1 - CID38MIWQ0",cost:2609.45,leads:23.0,cpl:113.45,threePlus:11.0,cpThreePlus:237.22,wanted:1.0,cpWanted:2609.45,sales:0.0,cps:null,hookRate:41.59,holdRate:28.82,ctrAll:2.44,ctrLink:2.32,cpm:26.2,impressions:99602.0,link:"https://www.facebook.com/?feed_demo_ad=6948091808372\u0026h=AQJ0IA67kvxjjtdG4owN02vXbeg"},
+{name:"Farzy Collab - Story Lead 2 - CIDY1XVGL3",cost:1309.01,leads:9.0,cpl:145.45,threePlus:5.0,cpThreePlus:261.8,wanted:5.0,cpWanted:261.8,sales:2.0,cps:654.5,hookRate:35.29,holdRate:37.14,ctrAll:3.72,ctrLink:3.62,cpm:42.37,impressions:30892.0,link:"https://www.facebook.com/?feed_demo_ad=6948091910972\u0026h=AQI85kHKNe_UW14UXmRuSquvN4g"},
+{name:"Farzy Collab - Story Lead 3 - CID5YVR7PI",cost:837.99,leads:5.0,cpl:167.6,threePlus:3.0,cpThreePlus:279.33,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:60.66,holdRate:75.84,ctrAll:18.04,ctrLink:19.91,cpm:80.53,impressions:10406.0,link:"https://www.facebook.com/?feed_demo_ad=6948092042772\u0026h=AQIYsE8Cz_ASrX-Si4tCiwsXj1g"},
+{name:"AliFaroukieAR - Story Body - CIDNDF8G34",cost:2819.55,leads:42.0,cpl:67.13,threePlus:22.0,cpThreePlus:128.16,wanted:6.0,cpWanted:469.93,sales:6.0,cps:469.93,hookRate:43.57,holdRate:34.65,ctrAll:2.41,ctrLink:1.21,cpm:18.89,impressions:149272.0,link:"https://www.facebook.com/?feed_demo_ad=6960406256372\u0026h=AQLJyB6Mn9mzZx08TpJ_bIlNbi0"},
+{name:"AliFaroukieAR - Story Body - CIDIZT0WCF",cost:3248.2,leads:34.0,cpl:95.54,threePlus:9.0,cpThreePlus:360.91,wanted:5.0,cpWanted:649.64,sales:5.0,cps:649.64,hookRate:34.28,holdRate:36.69,ctrAll:2.11,ctrLink:1.0,cpm:19.62,impressions:165570.0,link:"https://www.facebook.com/?feed_demo_ad=6954675551372\u0026h=AQLi-7QUVXgFSfipReH1L26bYx4"},
+{name:"Arabic Video 1v1",cost:38032.92,leads:433.0,cpl:87.84,threePlus:112.0,cpThreePlus:339.58,wanted:41.0,cpWanted:927.63,sales:35.0,cps:1086.65,hookRate:null,holdRate:null,ctrAll:2.41,ctrLink:1.33,cpm:18.96,impressions:2005912.0,link:"https://www.facebook.com/?feed_demo_ad=6860594082572\u0026h=AQJB_6m47Lwp4yuJsUxznfmkPzk"},
+{name:"Arabic Video 3",cost:28213.68,leads:248.0,cpl:113.76,threePlus:69.0,cpThreePlus:408.89,wanted:25.0,cpWanted:1128.55,sales:22.0,cps:1282.44,hookRate:null,holdRate:null,ctrAll:1.75,ctrLink:0.8,cpm:18.86,impressions:1495700.0,link:"https://www.facebook.com/?feed_demo_ad=6863376746572\u0026h=AQKWqB-erUC2zDJ4usJX8g0E_Fg"},
+{name:"Ali Video 8 - Ya checaste v2",cost:12672.34,leads:152.0,cpl:83.37,threePlus:16.0,cpThreePlus:792.02,wanted:10.0,cpWanted:1267.23,sales:9.0,cps:1408.04,hookRate:null,holdRate:null,ctrAll:1.03,ctrLink:0.52,cpm:21.42,impressions:591700.0,link:"https://www.facebook.com/?feed_demo_ad=6815850884972\u0026h=AQLwhYBj_9tn9UoDC5gXZyH0QiE"},
+{name:"Ali Video 5 - Mr Sanchez",cost:204627.56,leads:2668.0,cpl:76.7,threePlus:208.0,cpThreePlus:983.79,wanted:147.0,cpWanted:1392.02,sales:134.0,cps:1527.07,hookRate:null,holdRate:null,ctrAll:1.21,ctrLink:0.75,cpm:20.48,impressions:9989964.0,link:"https://www.facebook.com/?feed_demo_ad=6815841171972\u0026h=AQKzI2XedoljNthOoL-ixVsQ-RY"},
+{name:"Ali Video 7 - Ya checaste v1",cost:40219.4,leads:758.0,cpl:53.06,threePlus:84.0,cpThreePlus:478.8,wanted:31.0,cpWanted:1297.4,sales:27.0,cps:1489.61,hookRate:null,holdRate:null,ctrAll:0.99,ctrLink:0.5,cpm:17.35,impressions:2318260.0,link:"https://www.facebook.com/?feed_demo_ad=6815846130172\u0026h=AQI_jDOPGZRbZrYz5t-DbUn_e-s"},
+{name:"Ali Video English 50 Million (Long)",cost:1864.32,leads:1.0,cpl:1864.32,threePlus:0.0,cpThreePlus:null,wanted:1.0,cpWanted:1864.32,sales:1.0,cps:1864.32,hookRate:null,holdRate:null,ctrAll:0.66,ctrLink:0.5,cpm:21.67,impressions:86030.0,link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_e5v4"},
+{name:"Arabic Video 1v2",cost:39565.23,leads:369.0,cpl:107.22,threePlus:93.0,cpThreePlus:425.43,wanted:33.0,cpWanted:1198.95,sales:26.0,cps:1521.74,hookRate:null,holdRate:null,ctrAll:2.05,ctrLink:1.32,cpm:19.85,impressions:1993146.0,link:"https://www.facebook.com/?feed_demo_ad=6935063201772\u0026h=AQLRgNuKtRqVsw-azu8O5s2zXK8"},
+{name:"Arabic Video 2",cost:19784.25,leads:252.0,cpl:78.51,threePlus:72.0,cpThreePlus:274.78,wanted:26.0,cpWanted:760.93,sales:21.0,cps:942.11,hookRate:null,holdRate:null,ctrAll:1.87,ctrLink:1.01,cpm:16.69,impressions:1185278.0,link:"https://www.facebook.com/?feed_demo_ad=6935063619172\u0026h=AQLC3HtGUduhyWmqPruktaqEcpc"},
+{name:"Testimonial",cost:392704.64,leads:2560.0,cpl:153.4,threePlus:956.0,cpThreePlus:410.78,wanted:218.0,cpWanted:1801.4,sales:187.0,cps:2100.02,hookRate:null,holdRate:null,ctrAll:1.58,ctrLink:0.88,cpm:48.87,impressions:8035652.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ"},
+{name:"Ali Video 9 - Haz clic",cost:25165.15,leads:182.0,cpl:138.27,threePlus:23.0,cpThreePlus:1094.14,wanted:12.0,cpWanted:2097.1,sales:11.0,cps:2287.74,hookRate:null,holdRate:null,ctrAll:1.24,ctrLink:0.58,cpm:23.82,impressions:1056562.0,link:"https://www.facebook.com/?feed_demo_ad=6815853015972\u0026h=AQLEXcPiqBmXsXuWTvaq1d_tJwI"},
+{name:"Ali Video 9 - Haz clic (Loop)",cost:20411.09,leads:130.0,cpl:157.01,threePlus:14.0,cpThreePlus:1457.93,wanted:9.0,cpWanted:2267.9,sales:8.0,cps:2551.39,hookRate:null,holdRate:null,ctrAll:1.21,ctrLink:0.58,cpm:23.1,impressions:883621.0,link:"https://www.facebook.com/?feed_demo_ad=6815859147172\u0026h=AQJ0Zg_yf0D4e9tNNWoo0IYTDNM"},
+{name:"Trucking 2002 Video",cost:2665.32,leads:18.0,cpl:148.07,threePlus:1.0,cpThreePlus:2665.32,wanted:1.0,cpWanted:2665.32,sales:1.0,cps:2665.32,hookRate:null,holdRate:null,ctrAll:3.76,ctrLink:1.02,cpm:20.15,impressions:132300.0,link:"https://www.facebook.com/?feed_demo_ad=6865880493972\u0026h=AQLDafArS5mX7874NdGpx1W7aj8"},
+{name:"Truck Video - FB",cost:62373.08,leads:579.0,cpl:107.73,threePlus:227.0,cpThreePlus:274.77,wanted:29.0,cpWanted:2150.8,sales:24.0,cps:2598.88,hookRate:null,holdRate:null,ctrAll:2.36,ctrLink:1.95,cpm:30.44,impressions:2048750.0,link:"https://www.facebook.com/?feed_demo_ad=6848609416972\u0026h=AQKtQlfNRKA6ODBT7Rk9CLNCpgk"},
+{name:"Nichols Testimonial Video",cost:3404.76,leads:15.0,cpl:226.98,threePlus:7.0,cpThreePlus:486.39,wanted:1.0,cpWanted:3404.76,sales:1.0,cps:3404.76,hookRate:null,holdRate:null,ctrAll:1.58,ctrLink:0.87,cpm:22.36,impressions:152239.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ"},
+{name:"Truck Video - IG",cost:3766.22,leads:15.0,cpl:251.08,threePlus:6.0,cpThreePlus:627.7,wanted:1.0,cpWanted:3766.22,sales:1.0,cps:3766.22,hookRate:null,holdRate:null,ctrAll:0.52,ctrLink:0.31,cpm:27.91,impressions:134924.0,link:""},
+{name:"Ali Video English 50 Million",cost:4223.7,leads:17.0,cpl:248.45,threePlus:4.0,cpThreePlus:1055.92,wanted:2.0,cpWanted:2111.85,sales:1.0,cps:4223.7,hookRate:null,holdRate:null,ctrAll:0.76,ctrLink:0.5,cpm:35.35,impressions:119494.0,link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_e5v4"},
+{name:"Ali Video 1 (Loop)",cost:4731.92,leads:26.0,cpl:182.0,threePlus:6.0,cpThreePlus:788.65,wanted:1.0,cpWanted:4731.92,sales:1.0,cps:4731.92,hookRate:null,holdRate:null,ctrAll:1.87,ctrLink:0.72,cpm:16.3,impressions:290219.0,link:"https://www.facebook.com/?feed_demo_ad=6843203939572\u0026h=AQJErUzu-ubpeVwiK2qvR-E2iZU"},
+{name:"Arabic Video 4",cost:15724.83,leads:90.0,cpl:174.72,threePlus:29.0,cpThreePlus:542.24,wanted:3.0,cpWanted:5241.61,sales:3.0,cps:5241.61,hookRate:null,holdRate:null,ctrAll:5.98,ctrLink:2.0,cpm:14.61,impressions:1076480.0,link:"https://www.facebook.com/?feed_demo_ad=6863376825572\u0026h=AQLgih_rNoUaJAB2QWrG8KpEc6w"},
+{name:"Ali Video 1",cost:48420.35,leads:70.0,cpl:691.72,threePlus:14.0,cpThreePlus:3458.6,wanted:5.0,cpWanted:9684.07,sales:5.0,cps:9684.07,hookRate:null,holdRate:null,ctrAll:1.3,ctrLink:0.73,cpm:31.71,impressions:1527106.0,link:"https://www.facebook.com/?feed_demo_ad=6805213765572\u0026h=AQIKIr1g-ZFBB4eoXVbuLwDvZ2A"},
+{name:"Ali Video 2 - No Firmes",cost:857.35,leads:7.0,cpl:122.48,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.04,ctrLink:0.45,cpm:21.37,impressions:40123.0,link:"https://www.facebook.com/?feed_demo_ad=6815829853972\u0026h=AQIFsmyxQBvHAz2MqDRdCLJMGb0"},
+{name:"Ali Video 6 - Somos",cost:2600.24,leads:24.0,cpl:108.34,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.31,ctrLink:0.6,cpm:24.36,impressions:106763.0,link:"https://www.facebook.com/?feed_demo_ad=6815843296572\u0026h=AQKGVQFH1LdHh3QtzNQXwHE_NtY"},
+{name:"Jose Testimonial",cost:58717.78,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.67,ctrLink:0.69,cpm:22.8,impressions:2575697.0,link:"https://www.facebook.com/?feed_demo_ad=6635244273372\u0026h=AQJv7r6s21KhS08xBzQCtf2PGlo"},
+{name:"Luis Testimonial",cost:4966.15,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.55,ctrLink:1.14,cpm:37.49,impressions:132453.0,link:"https://www.facebook.com/?feed_demo_ad=6635244273172\u0026h=AQLFNnGJm1jZJ-1t9dja_Y9dGIE"},
+{name:"Alejandro Testimonial",cost:8.91,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.47,ctrLink:1.47,cpm:131.03,impressions:68.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ"},
+{name:"706 Testimonial",cost:7509.76,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.71,ctrLink:0.6,cpm:18.68,impressions:401926.0,link:"https://www.facebook.com/?feed_demo_ad=6635244272972\u0026h=AQJQTbgJi8TYBG8ClJDcJaQ7GhU"},
+{name:"Truck Video - FB/IG",cost:2035.75,leads:17.0,cpl:119.75,threePlus:5.0,cpThreePlus:407.15,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:0.95,ctrLink:0.47,cpm:36.59,impressions:55643.0,link:"https://www.facebook.com/?feed_demo_ad=6828957028372\u0026h=AQLzYsktz8n5lQPHg_onue7wOwo"},
+{name:"Truck Video x Disclaimer",cost:1.67,leads:0.0,cpl:null,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:50.61,impressions:33.0,link:"https://www.facebook.com/?feed_demo_ad=6913352982172\u0026h=AQLSJ7DUOf9YN3Et9iFGNlxmNI4"},
+{name:"Spanish - Senior Car Accident Videos",cost:544.74,leads:2.0,cpl:272.37,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:0.71,ctrLink:0.3,cpm:42.19,impressions:12912.0,link:"https://www.facebook.com/?feed_demo_ad=6809123932772\u0026h=AQLRApN73ct908Ay8uB02frLjmc"},
+{name:"Spanish - Family Car Accident Videos",cost:437.4,leads:1.0,cpl:437.4,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:0.39,ctrLink:0.18,cpm:41.76,impressions:10475.0,link:"https://www.facebook.com/?feed_demo_ad=6809121145972\u0026h=AQIe_mn_9TpZ3qx1x8HY9alpGlw"},
+{name:"Elle Car UGC Video",cost:845.96,leads:1.0,cpl:845.96,threePlus:1.0,cpThreePlus:845.96,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.45,ctrLink:1.24,cpm:20.12,impressions:42053.0,link:"https://www.facebook.com/?feed_demo_ad=6865824688172\u0026h=AQJyNuE_91vrj4BzfuFxYNadfoE"},
+{name:"Elle House UGC Video",cost:621.22,leads:1.0,cpl:621.22,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.52,ctrLink:1.36,cpm:17.07,impressions:36388.0,link:"https://www.facebook.com/?feed_demo_ad=6865843413172\u0026h=AQL3hWWSWlosTcpfxWpvN4261Jo"},
+{name:"Boxing Video",cost:2113.12,leads:4.0,cpl:528.28,threePlus:2.0,cpThreePlus:1056.56,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.24,ctrLink:0.98,cpm:15.74,impressions:134246.0,link:"https://www.facebook.com/?feed_demo_ad=6865879905972\u0026h=AQILOwEe1qxusrjqmnsyZbnOsx0"},
+{name:"Arabic Rolls Video",cost:2518.6,leads:16.0,cpl:157.41,threePlus:7.0,cpThreePlus:359.8,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:8.93,ctrLink:2.94,cpm:11.95,impressions:210823.0,link:"https://www.facebook.com/?feed_demo_ad=6863376942972\u0026h=AQLSJFsDYmW5QqgjbnGq6ekvxC8"},
+{name:"6 Ali Videos",cost:1166.01,leads:4.0,cpl:291.5,threePlus:0.0,cpThreePlus:null,wanted:0.0,cpWanted:null,sales:0.0,cps:null,hookRate:null,holdRate:null,ctrAll:1.15,ctrLink:0.54,cpm:30.42,impressions:38327.0,link:"https://www.facebook.com/?feed_demo_ad=6665112964772\u0026h=AQL5oG2ySei0yai_8OIwTQQmork"}],
+videoConcepts:[{name:"Testimonial",cost:392704.64,leads:2560.0,cpl:153.4,threePlus:956.0,cpThreePlus:410.78,wanted:218.0,cpWanted:1801.4,sales:187.0,cps:2100.02,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:48.87,impressions:8035652.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ",variations:1},
+{name:"Ali Video 5",cost:204627.56,leads:2668.0,cpl:76.7,threePlus:208.0,cpThreePlus:983.79,wanted:147.0,cpWanted:1392.02,sales:134.0,cps:1527.07,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:20.48,impressions:9989964.0,link:"https://www.facebook.com/?feed_demo_ad=6815841171972\u0026h=AQKzI2XedoljNthOoL-ixVsQ-RY",variations:1},
+{name:"Arabic Video",cost:77598.15,leads:802.0,cpl:96.76,threePlus:205.0,cpThreePlus:378.53,wanted:74.0,cpWanted:1048.62,sales:61.0,cps:1272.1,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:19.4,impressions:3999058.0,link:"https://www.facebook.com/?feed_demo_ad=6935063201772\u0026h=AQLRgNuKtRqVsw-azu8O5s2zXK8",variations:2},
+{name:"Truck Video",cost:68176.72,leads:611.0,cpl:111.58,threePlus:238.0,cpThreePlus:286.46,wanted:30.0,cpWanted:2272.56,sales:25.0,cps:2727.07,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:30.44,impressions:2239350.0,link:"https://www.facebook.com/?feed_demo_ad=6848609416972\u0026h=AQKtQlfNRKA6ODBT7Rk9CLNCpgk",variations:4},
+{name:"Jose Testimonial",cost:58717.78,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:22.8,impressions:2575697.0,link:"https://www.facebook.com/?feed_demo_ad=6635244273372\u0026h=AQJv7r6s21KhS08xBzQCtf2PGlo",variations:1},
+{name:"Ali Video 1",cost:53152.27,leads:96.0,cpl:553.67,threePlus:20.0,cpThreePlus:2657.61,wanted:6.0,cpWanted:8858.71,sales:6.0,cps:8858.71,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:29.25,impressions:1817325.0,link:"https://www.facebook.com/?feed_demo_ad=6805213765572\u0026h=AQIKIr1g-ZFBB4eoXVbuLwDvZ2A",variations:2},
+{name:"Ali Video 9",cost:45576.240000000005,leads:312.0,cpl:146.08,threePlus:37.0,cpThreePlus:1231.79,wanted:21.0,cpWanted:2170.3,sales:19.0,cps:2398.75,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:23.49,impressions:1940183.0,link:"https://www.facebook.com/?feed_demo_ad=6815853015972\u0026h=AQLEXcPiqBmXsXuWTvaq1d_tJwI",variations:2},
+{name:"Ali Video 7",cost:40219.4,leads:758.0,cpl:53.06,threePlus:84.0,cpThreePlus:478.8,wanted:31.0,cpWanted:1297.4,sales:27.0,cps:1489.61,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:17.35,impressions:2318260.0,link:"https://www.facebook.com/?feed_demo_ad=6815846130172\u0026h=AQI_jDOPGZRbZrYz5t-DbUn_e-s",variations:1},
+{name:"Arabic Video 3",cost:28213.68,leads:248.0,cpl:113.76,threePlus:69.0,cpThreePlus:408.89,wanted:25.0,cpWanted:1128.55,sales:22.0,cps:1282.44,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:18.86,impressions:1495700.0,link:"https://www.facebook.com/?feed_demo_ad=6863376746572\u0026h=AQKWqB-erUC2zDJ4usJX8g0E_Fg",variations:1},
+{name:"AliDevonteCollab",cost:22547.92,leads:325.0,cpl:69.38,threePlus:158.0,cpThreePlus:142.71,wanted:17.0,cpWanted:1326.35,sales:13.0,cps:1734.46,hookRate:35.4,holdRate:37.4,ctrAll:null,ctrLink:null,cpm:47.62,impressions:473493.0,link:"https://www.facebook.com/?feed_demo_ad=6916098488972\u0026h=AQI-4gYkix2RDFIhHYzueVzoPCQ",variations:7},
+{name:"Arabic Video 2",cost:19784.25,leads:252.0,cpl:78.51,threePlus:72.0,cpThreePlus:274.78,wanted:26.0,cpWanted:760.93,sales:21.0,cps:942.11,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:16.69,impressions:1185278.0,link:"https://www.facebook.com/?feed_demo_ad=6935063619172\u0026h=AQLC3HtGUduhyWmqPruktaqEcpc",variations:1},
+{name:"Arabic Video 4",cost:15724.83,leads:90.0,cpl:174.72,threePlus:29.0,cpThreePlus:542.24,wanted:3.0,cpWanted:5241.61,sales:3.0,cps:5241.61,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:14.61,impressions:1076480.0,link:"https://www.facebook.com/?feed_demo_ad=6863376825572\u0026h=AQLgih_rNoUaJAB2QWrG8KpEc6w",variations:1},
+{name:"Ali Video 8",cost:12672.34,leads:152.0,cpl:83.37,threePlus:16.0,cpThreePlus:792.02,wanted:10.0,cpWanted:1267.23,sales:9.0,cps:1408.04,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:21.42,impressions:591700.0,link:"https://www.facebook.com/?feed_demo_ad=6815850884972\u0026h=AQLwhYBj_9tn9UoDC5gXZyH0QiE",variations:1},
+{name:"AliFarzyCollab",cost:9981.560000000001,leads:149.0,cpl:66.99,threePlus:64.0,cpThreePlus:155.96,wanted:15.0,cpWanted:665.44,sales:12.0,cps:831.8,hookRate:39.3,holdRate:38.3,ctrAll:null,ctrLink:null,cpm:25.36,impressions:393553.0,link:"https://www.facebook.com/?feed_demo_ad=6916096851172\u0026h=AQLeSddtbXv_faRBhesF6hM_CTY",variations:5},
+{name:"AliFaroukieAR",cost:9643.630000000001,leads:86.0,cpl:112.14,threePlus:37.0,cpThreePlus:260.64,wanted:11.0,cpWanted:876.69,sales:11.0,cps:876.69,hookRate:37.6,holdRate:35.3,ctrAll:null,ctrLink:null,cpm:18.96,impressions:508604.0,link:"https://www.facebook.com/?feed_demo_ad=6954675551372\u0026h=AQLi-7QUVXgFSfipReH1L26bYx4",variations:5},
+{name:"706 Testimonial",cost:7509.76,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:18.68,impressions:401926.0,link:"https://www.facebook.com/?feed_demo_ad=6635244272972\u0026h=AQJQTbgJi8TYBG8ClJDcJaQ7GhU",variations:1},
+{name:"Farzy Collab",cost:7397.79,leads:74.0,cpl:99.97,threePlus:35.0,cpThreePlus:211.37,wanted:11.0,cpWanted:672.53,sales:3.0,cps:2465.93,hookRate:35.5,holdRate:36.0,ctrAll:null,ctrLink:null,cpm:30.25,impressions:244526.0,link:"https://www.facebook.com/?feed_demo_ad=6948091808372\u0026h=AQJ0IA67kvxjjtdG4owN02vXbeg",variations:5},
+{name:"Luis Testimonial",cost:4966.15,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:37.49,impressions:132453.0,link:"https://www.facebook.com/?feed_demo_ad=6635244273172\u0026h=AQLFNnGJm1jZJ-1t9dja_Y9dGIE",variations:1},
+{name:"Ali Video English 50 Million",cost:4223.7,leads:17.0,cpl:248.45,threePlus:4.0,cpThreePlus:1055.92,wanted:2.0,cpWanted:2111.85,sales:1.0,cps:4223.7,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:35.35,impressions:119494.0,link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_e5v4",variations:1},
+{name:"Nichols Testimonial Video",cost:3404.76,leads:15.0,cpl:226.98,threePlus:7.0,cpThreePlus:486.39,wanted:1.0,cpWanted:3404.76,sales:1.0,cps:3404.76,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:22.36,impressions:152239.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ",variations:1},
+{name:"Trucking 2002 Video",cost:2665.32,leads:18.0,cpl:148.07,threePlus:1.0,cpThreePlus:2665.32,wanted:1.0,cpWanted:2665.32,sales:1.0,cps:2665.32,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:20.15,impressions:132300.0,link:"https://www.facebook.com/?feed_demo_ad=6865880493972\u0026h=AQLDafArS5mX7874NdGpx1W7aj8",variations:1},
+{name:"Ali Video 6",cost:2600.24,leads:24.0,cpl:108.34,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:24.36,impressions:106763.0,link:"https://www.facebook.com/?feed_demo_ad=6815843296572\u0026h=AQKGVQFH1LdHh3QtzNQXwHE_NtY",variations:1},
+{name:"Arabic Rolls Video",cost:2518.6,leads:16.0,cpl:157.41,threePlus:7.0,cpThreePlus:359.8,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:11.95,impressions:210823.0,link:"https://www.facebook.com/?feed_demo_ad=6863376942972\u0026h=AQLSJFsDYmW5QqgjbnGq6ekvxC8",variations:1},
+{name:"Testi_AllenSp",cost:2154.23,leads:5.0,cpl:430.85,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:26.7,holdRate:59.5,ctrAll:null,ctrLink:null,cpm:43.46,impressions:49570.0,link:"https://drive.google.com/file/d/1u6n6smRl3pPriswYte5rpwhEOwA9oq48/view?usp=drive_link",variations:1},
+{name:"Boxing Video",cost:2113.12,leads:4.0,cpl:528.28,threePlus:2.0,cpThreePlus:1056.56,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:15.74,impressions:134246.0,link:"https://www.facebook.com/?feed_demo_ad=6865879905972\u0026h=AQILOwEe1qxusrjqmnsyZbnOsx0",variations:1},
+{name:"Ali Video English 50 Million (Long)",cost:1864.32,leads:1.0,cpl:1864.32,threePlus:null,cpThreePlus:null,wanted:1.0,cpWanted:1864.32,sales:1.0,cps:1864.32,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:21.67,impressions:86030.0,link:"https://www.facebook.com/?feed_demo_ad=6845519212172\u0026h=AQImwjUw04nmsu1eYjJEIi_e5v4",variations:1},
+{name:"6 Ali Videos",cost:1166.01,leads:4.0,cpl:291.5,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:30.42,impressions:38327.0,link:"https://www.facebook.com/?feed_demo_ad=6665112964772\u0026h=AQL5oG2ySei0yai_8OIwTQQmork",variations:1},
+{name:"Spanish",cost:982.14,leads:3.0,cpl:327.38,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:42.0,impressions:23387.0,link:"https://www.facebook.com/?feed_demo_ad=6809123932772\u0026h=AQLRApN73ct908Ay8uB02frLjmc",variations:2},
+{name:"Ali Video 2",cost:857.35,leads:7.0,cpl:122.48,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:21.37,impressions:40123.0,link:"https://www.facebook.com/?feed_demo_ad=6815829853972\u0026h=AQIFsmyxQBvHAz2MqDRdCLJMGb0",variations:1},
+{name:"Elle Car UGC Video",cost:845.96,leads:1.0,cpl:845.96,threePlus:1.0,cpThreePlus:845.96,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:20.12,impressions:42053.0,link:"https://www.facebook.com/?feed_demo_ad=6865824688172\u0026h=AQJyNuE_91vrj4BzfuFxYNadfoE",variations:1},
+{name:"Elle House UGC Video",cost:621.22,leads:1.0,cpl:621.22,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:17.07,impressions:36388.0,link:"https://www.facebook.com/?feed_demo_ad=6865843413172\u0026h=AQL3hWWSWlosTcpfxWpvN4261Jo",variations:1},
+{name:"AliFaroukie",cost:246.0,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:28.2,holdRate:30.6,ctrAll:null,ctrLink:null,cpm:27.91,impressions:8814.0,link:"https://www.facebook.com/?feed_demo_ad=6915914314172\u0026h=AQJs9Q--cV9kTJv06930duwI1AY",variations:1},
+{name:"Alejandro Testimonial",cost:8.91,leads:null,cpl:null,threePlus:null,cpThreePlus:null,wanted:null,cpWanted:null,sales:null,cps:null,hookRate:null,holdRate:null,ctrAll:null,ctrLink:null,cpm:131.03,impressions:68.0,link:"https://www.facebook.com/?feed_demo_ad=6670775032372\u0026h=AQKClVSKlFxd5ZizUZIC9qN0hDQ",variations:1}]
 };
 
-let activeTab='static',sortCol='cost',sortDir=-1,filters={win:false,spend:false};
-function toggleFilter(f){filters[f]=!filters[f];document.getElementById('btn'+(f==='win'?'Win':'Spend')).classList.toggle('on');render()}
-function ccBadge(v,metric){if(v==null||v===0)return'nd';const k=KPI[metric];if(!k)return'nd';return v<=k.green?'wk':v<=k.yellow?'of':'ak';}
-function fmt$(v){if(v==null)return'<span class="nd">\u2014</span>';return'$'+v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function fmtSpend(v){if(v==null)return'<span class="nd">\u2014</span>';return'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function fmtN(v){if(v==null)return'<span class="nd">\u2014</span>';return Math.round(v).toLocaleString()}
-function fmtPct(v){if(v==null)return'<span class="nd">\u2014</span>';return v.toFixed(2)+'%'}
-function badge(v,metric){if(v==null)return'<span class="nd">\u2014</span>';const c=ccBadge(v,metric);return'<span class="'+c+'">'+fmt$(v)+'</span>';}
-function statusBadge(s){if(!s)return'<span class="nd">\u2014</span>';const sl=s.toLowerCase();let cls='st-testing';if(sl==='winner')cls='st-winner';else if(sl==='loser')cls='st-loser';else if(sl.includes('fence'))cls='st-fence';else if(sl==='paused'||sl==='past winner'||sl==='killed')cls='st-paused';return'<span class="badge '+cls+'">'+s+'</span>';}
-function viewLink(link){if(!link)return'<span class="nd">\u2014</span>';return'<a class="view" href="'+link+'" target="_blank" rel="noopener">View <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h7v7M10 2L2 10"/></svg></a>';}
-function buildTabs(){const el=document.getElementById('tabs');el.innerHTML=TABS.map(t=>'<div class="tab'+(t.id===activeTab?' active':'')+'" onclick="switchTab(\''+t.id+'\')">'+t.label+' <span class="cnt">('+t.count+')</span></div>').join('');}
-function switchTab(id){activeTab=id;sortCol='cost';sortDir=-1;buildTabs();render()}
-function render(){
-  const tab=TABS.find(t=>t.id===activeTab);const isConcept=tab.concept;
-  let rows=[...DATA[activeTab]];
-  const q=document.getElementById('search').value.toLowerCase();
-  if(q)rows=rows.filter(r=>r.name.toLowerCase().includes(q));
-  if(filters.win)rows=rows.filter(r=>(r.status||'').toLowerCase()==='winner');
-  if(filters.spend)rows=rows.filter(r=>(r.cost||0)>=5000);
-  rows.sort((a,b)=>{let av=a[sortCol],bv=b[sortCol];if(av==null&&bv==null)return 0;if(av==null)return 1;if(bv==null)return-1;return sortDir*(av-bv);});
-  const cols=[{key:'idx',label:'#',sort:false},{key:'name',label:'NAME',sort:false},{key:'link',label:'AD',sort:false},
-    isConcept?{key:'variations',label:'# ADS',sort:true}:{key:'status',label:'STATUS',sort:false},
-    {key:'cost',label:'SPEND',sort:true},{key:'leads',label:'LEADS',sort:true},{key:'cpl',label:'CPL',sort:true},
-    {key:'threeplus',label:'3+ LEADS',sort:true},{key:'cpThreeplus',label:'$/3+ LEAD',sort:true},
-    {key:'wanted',label:'WANTED',sort:true},{key:'cpWanted',label:'$/WANTED',sort:true},
-    {key:'sales',label:'SALES',sort:true},{key:'cpSale',label:'CPS',sort:true},
-    {key:'ctrAll',label:'CTR (ALL)',sort:true},{key:'ctrLink',label:'CTR (LINK)',sort:true},
-    {key:'cpm',label:'CPM',sort:true},{key:'impressions',label:'IMPR',sort:true}];
-  let thead='<tr>';
-  cols.forEach(c=>{const isSorted=c.key===sortCol;const cls=(c.key==='idx'?'col-idx':(c.key==='name'?'col-name':''))+(isSorted?' sorted':'');const arrow=c.sort?'<span class="arr">'+(isSorted?(sortDir>0?'\u25B2':'\u25BC'):'\u25B2')+'</span>':'';const click=c.sort?' onclick="doSort(\''+c.key+'\')"':'';thead+='<th class="'+cls+'"'+click+'>'+c.label+arrow+'</th>';});
-  thead+='</tr>';
-  let tbody='';
-  rows.forEach((r,i)=>{tbody+='<tr>';cols.forEach(c=>{const cls=c.key==='idx'?'col-idx':(c.key==='name'?'col-name':'');let val='';
-    switch(c.key){
-      case'idx':val=i+1;break;
-      case'name':val=isConcept?r.name+' <span style="color:#64748B;font-size:11px">('+r.variations+' ads)</span>':r.name;break;
-      case'link':val=viewLink(r.link);break;
-      case'status':val=statusBadge(r.status);break;
-      case'variations':val=r.variations;break;
-      case'cost':val=fmtSpend(r.cost);break;
-      case'leads':val=fmtN(r.leads);break;
-      case'cpl':val=badge(r.cpl,'cpl');break;
-      case'threeplus':val=fmtN(r.threeplus);break;
-      case'cpThreeplus':val=badge(r.cpThreeplus,'cpThreeplus');break;
-      case'wanted':val=fmtN(r.wanted);break;
-      case'cpWanted':val=badge(r.cpWanted,'cpWanted');break;
-      case'sales':val=fmtN(r.sales);break;
-      case'cpSale':val=badge(r.cpSale,'cps');break;
-      case'ctrAll':val=fmtPct(r.ctrAll);break;
-      case'ctrLink':val=fmtPct(r.ctrLink);break;
-      case'cpm':val=r.cpm!=null?fmt$(r.cpm):'<span class="nd">\u2014</span>';break;
-      case'impressions':val=fmtN(r.impressions);break;
-    }
-    tbody+='<td class="'+cls+'">'+val+'</td>';});tbody+='</tr>';});
-  document.getElementById('tblWrap').innerHTML='<table><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>';
-  document.getElementById('rowCount').textContent=rows.length+' of '+DATA[activeTab].length+' creatives';
+const TABS=[
+{key:'statics',label:'Static Ads',count:113,isConcept:false,isVideo:false},
+{key:'staticConcepts',label:'Static Concepts',count:36,isConcept:true,isVideo:false},
+{key:'videos',label:'Video Ads',count:58,isConcept:false,isVideo:true},
+{key:'videoConcepts',label:'Video Concepts',count:33,isConcept:true,isVideo:true}
+];
+
+const KPI={
+cps:{green:2000,yellow:2500},
+cpWanted:{green:5000,yellow:8000},
+cpThreePlus:{green:300,yellow:500},
+cpl:{green:120,yellow:180},
+hookRate:{green:30,yellow:20},
+holdRate:{green:30,yellow:20}
+};
+
+let curTab=0,sortCol='cost',sortAsc=false,filters={winners:false,spend:false};
+
+function ccBadge(v,metric){
+if(v==null||v===0)return'nd';
+const k=KPI[metric];if(!k)return'nd';
+if(metric==='hookRate'||metric==='holdRate')return v>=k.green?'wk':v>=k.yellow?'of':'ak';
+return v<=k.green?'wk':v<=k.yellow?'of':'ak';
 }
-function doSort(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}render();}
-buildTabs();render();
+
+function fmt$(v){if(v==null)return'<span class="nd">&mdash;</span>';return'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtD(v){if(v==null)return'<span class="nd">&mdash;</span>';return'$'+Math.round(v).toLocaleString('en-US')}
+function fmtN(v){if(v==null)return'<span class="nd">&mdash;</span>';return Math.round(v).toLocaleString('en-US')}
+function fmtP(v){if(v==null)return'<span class="nd">&mdash;</span>';return v.toFixed(2)+'%'}
+function fmtP1(v){if(v==null)return'<span class="nd">&mdash;</span>';return v.toFixed(1)+'%'}
+function fmtBadge(v,metric){
+if(v==null)return'<span class="nd">&mdash;</span>';
+const cls=ccBadge(v,metric);
+if(metric==='hookRate'||metric==='holdRate')return'<span class="'+cls+'">'+v.toFixed(1)+'%</span>';
+return'<span class="'+cls+'">$'+Math.round(v).toLocaleString('en-US')+'</span>';
+}
+function fmtLink(url){
+if(!url)return'<span class="nd">&mdash;</span>';
+return'<a class="view-link" href="'+url.replace(/\\u0026/g,'&')+'" target="_blank" rel="noopener">View <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1h7v7M11 1L4.5 7.5"/></svg></a>';
+}
+
+function buildLegend(){
+const t=TABS[curTab];
+let h='';
+h+='<div class="legend-item"><span class="dot dot-g"></span>CPS &le; $2,000 | CP3+ &le; $300 | CPL &le; $120</div>';
+h+='<div class="legend-item"><span class="dot dot-y"></span>CPS $2,000&ndash;$2,500 | CP3+ $300&ndash;$500 | CPL $120&ndash;$180</div>';
+h+='<div class="legend-item"><span class="dot dot-r"></span>CPS &gt; $2,500 | CP3+ &gt; $500 | CPL &gt; $180</div>';
+if(t.isVideo){
+h+='<div class="legend-item"><span class="dot dot-g"></span>Hook/Hold &ge; 30%</div>';
+h+='<div class="legend-item"><span class="dot dot-y"></span>Hook/Hold 20&ndash;30%</div>';
+h+='<div class="legend-item"><span class="dot dot-r"></span>Hook/Hold &lt; 20%</div>';
+}
+h+='<div class="legend-item"><span class="dot dot-gr"></span>No Data</div>';
+document.getElementById('legend').innerHTML=h;
+}
+
+function buildTabs(){
+let h='';
+TABS.forEach((t,i)=>{
+h+='<div class="tab'+(i===curTab?' active':'')+'" onclick="switchTab('+i+')">'+t.label+' <span class="cnt">('+t.count+')</span></div>';
+});
+document.getElementById('tabBar').innerHTML=h;
+}
+
+function getCols(){
+const t=TABS[curTab];
+let cols=[
+{key:'idx',label:'#',sortable:false,cls:'col-idx'},
+{key:'name',label:'Name',sortable:true,cls:'col-name'},
+{key:'link',label:'Ad',sortable:false},
+];
+if(t.isConcept)cols.push({key:'variations',label:'# Ads',sortable:true});
+cols.push(
+{key:'cost',label:'Spend',sortable:true},
+{key:'leads',label:'Leads',sortable:true},
+{key:'cpl',label:'CPL',sortable:true,badge:'cpl'},
+{key:'threePlus',label:'3+ Leads',sortable:true},
+{key:'cpThreePlus',label:'$/3+ Lead',sortable:true,badge:'cpThreePlus'},
+{key:'wanted',label:'Wanted',sortable:true},
+{key:'cpWanted',label:'$/Wanted',sortable:true,badge:'cpWanted'},
+{key:'sales',label:'Sales',sortable:true},
+{key:'cps',label:'CPS',sortable:true,badge:'cps'}
+);
+if(t.isVideo){
+cols.push({key:'hookRate',label:'Hook %',sortable:true,badge:'hookRate'});
+cols.push({key:'holdRate',label:'Hold %',sortable:true,badge:'holdRate'});
+}
+cols.push(
+{key:'ctrAll',label:'CTR (all)',sortable:true},
+{key:'ctrLink',label:'CTR (link)',sortable:true},
+{key:'cpm',label:'CPM',sortable:true},
+{key:'impressions',label:'Impr',sortable:true}
+);
+return cols;
+}
+
+function renderTable(){
+const t=TABS[curTab];
+const cols=getCols();
+const data=DATA[t.key].slice();
+const q=document.getElementById('search').value.toLowerCase();
+
+// Filter
+let filtered=data.filter(r=>{
+if(q&&!r.name.toLowerCase().includes(q))return false;
+if(filters.spend&&(r.cost==null||r.cost<1500))return false;
+if(filters.winners&&(r.cps==null||r.cps>2000))return false;
+return true;
+});
+
+// Sort
+filtered.sort((a,b)=>{
+let va=a[sortCol],vb=b[sortCol];
+if(va==null&&vb==null)return 0;
+if(va==null)return 1;
+if(vb==null)return -1;
+if(typeof va==='string')return sortAsc?va.localeCompare(vb):vb.localeCompare(va);
+return sortAsc?va-vb:vb-va;
+});
+
+// Header
+let th='<tr>';
+cols.forEach(c=>{
+const sorted=c.key===sortCol;
+const arrow=sorted?(sortAsc?'&#9650;':'&#9660;'):'&#9650;';
+const cls=(c.cls||'')+(sorted?' sorted':'');
+if(c.sortable){
+th+='<th class="'+cls+'" onclick="doSort(\''+c.key+'\')">'+c.label+'<span class="arr">'+arrow+'</span></th>';
+}else{
+th+='<th class="'+cls+'">'+c.label+'</th>';
+}
+});
+th+='</tr>';
+document.getElementById('thead').innerHTML=th;
+
+// Body
+let tb='';
+filtered.forEach((r,i)=>{
+tb+='<tr>';
+cols.forEach(c=>{
+const cls=c.cls||'';
+if(c.key==='idx'){tb+='<td class="'+cls+'">'+(i+1)+'</td>';return;}
+if(c.key==='name'){tb+='<td class="'+cls+'" title="'+r.name.replace(/"/g,'&quot;')+'">'+r.name+'</td>';return;}
+if(c.key==='link'){tb+='<td>'+fmtLink(r.link)+'</td>';return;}
+if(c.key==='variations'){tb+='<td>'+fmtN(r.variations)+'</td>';return;}
+if(c.key==='cost'){tb+='<td>'+fmt$(r.cost)+'</td>';return;}
+if(c.key==='leads'||c.key==='threePlus'||c.key==='wanted'||c.key==='sales'){tb+='<td>'+fmtN(r[c.key])+'</td>';return;}
+if(c.badge){tb+='<td>'+fmtBadge(r[c.key],c.badge)+'</td>';return;}
+if(c.key==='ctrAll'||c.key==='ctrLink'){tb+='<td>'+fmtP(r[c.key])+'</td>';return;}
+if(c.key==='cpm'){tb+='<td>'+fmtD(r[c.key])+'</td>';return;}
+if(c.key==='impressions'){tb+='<td>'+fmtN(r[c.key])+'</td>';return;}
+tb+='<td>'+fmtN(r[c.key])+'</td>';
+});
+tb+='</tr>';
+});
+document.getElementById('tbody').innerHTML=tb;
+document.getElementById('rowCount').textContent=filtered.length+' of '+data.length+' creatives';
+}
+
+function switchTab(i){curTab=i;sortCol='cost';sortAsc=false;buildTabs();buildLegend();renderTable();}
+function doSort(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=false;}renderTable();}
+function toggleFilter(f){
+filters[f]=!filters[f];
+document.getElementById(f==='winners'?'btnWinners':'btnSpend').classList.toggle('active');
+renderTable();
+}
+document.getElementById('search').addEventListener('input',renderTable);
+
+// Init
+buildTabs();buildLegend();renderTable();
 </script>
 </body>
 </html>
