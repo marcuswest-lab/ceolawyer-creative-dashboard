@@ -341,7 +341,7 @@ const TABS=[
 
 const KPI={
 cps:{green:2000,yellow:2500},
-cpWanted:{green:5000,yellow:8000},
+cpWanted:{green:2000,yellow:3000},
 cpThreePlus:{green:300,yellow:500},
 cpl:{green:120,yellow:180},
 hookRate:{green:30,yellow:20},
@@ -381,9 +381,9 @@ return'<a class="view-link" href="'+url.replace(/\u0026/g,'&')+'" target="_blank
 function buildLegend(){
 const t=TABS[curTab];
 let h='';
-h+='<div class="legend-item"><span class="dot dot-g"></span>CPS &le; $2,000 | CP3+ &le; $300 | CPL &le; $120</div>';
-h+='<div class="legend-item"><span class="dot dot-y"></span>CPS $2,000&ndash;$2,500 | CP3+ $300&ndash;$500 | CPL $120&ndash;$180</div>';
-h+='<div class="legend-item"><span class="dot dot-r"></span>CPS &gt; $2,500 | CP3+ &gt; $500 | CPL &gt; $180</div>';
+h+='<div class="legend-item"><span class="dot dot-g"></span>CPS &le; $2,000 | $/Wanted &le; $2,000 | CP3+ &le; $300 | CPL &le; $120</div>';
+h+='<div class="legend-item"><span class="dot dot-y"></span>CPS $2,000&ndash;$2,500 | $/Wanted $2,000&ndash;$3,000 | CP3+ $300&ndash;$500 | CPL $120&ndash;$180</div>';
+h+='<div class="legend-item"><span class="dot dot-r"></span>CPS &gt; $2,500 | $/Wanted &gt; $3,000 | CP3+ &gt; $500 | CPL &gt; $180</div>';
 if(t.isVideo){
 h+='<div class="legend-item"><span class="dot dot-g"></span>Hook/Hold &ge; 30%</div>';
 h+='<div class="legend-item"><span class="dot dot-y"></span>Hook/Hold 20&ndash;30%</div>';
