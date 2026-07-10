@@ -356,7 +356,7 @@ function renderTable(){
   if(filters.winners&&(r.cps==null||r.cps>2000))return false;
   return true;
  });
- filtered = filtered.filter(__cfEval);
+ filtered = (typeof __cfEval==='function') ? filtered.filter(__cfEval) : filtered;
  filtered.sort((a,b)=>{
   let va=a[sortCol],vb=b[sortCol];
   if(va==null&&vb==null)return 0;
